@@ -191,7 +191,7 @@ public class AlienDecisor extends BasicDecisor
 	{
 		if (this.myBase != null)
 		{
-			System.out.println("My Base "+ this.myBase.x+ " "+ this.myBase.y );
+			//System.out.println("My Base "+ this.myBase.x+ " "+ this.myBase.y );
 			
 			int baseNode = aiWorld.obtainCurrentNode(this.myBase).getIdNode();
 

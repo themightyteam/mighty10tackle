@@ -2,6 +2,7 @@ package ludum.mighty.square.player;
 
 import java.util.ArrayList;
 
+import ludum.mighty.square.assets.SoundAssets;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.world.MightyWorld;
 import ludum.mighty.square.world.pathnodes.PathNode;
@@ -49,6 +50,8 @@ public class NormalPlayer extends Player
 	
 	String name = "HUMAN";
 
+	MightyWorld world;
+	
 	public NormalPlayer() {
 	};
 
@@ -61,6 +64,8 @@ public class NormalPlayer extends Player
 			MightyWorld world
 			)
 	{
+		this.world = world;
+		
 		//Update the lists
 		this.greenTeamList = myTeamList;
 		this.violetTeamList = enemyList;
@@ -161,7 +166,19 @@ public class NormalPlayer extends Player
 			// firingSinceEpoch)
 			if ((this.jumpingSinceEpoch == 0) || (timeEpoch - this.jumpingSinceEpoch < 300)) {
 				if (this.jumpingSinceEpoch == 0)
+				{	
+					//Play jump sound if close to the player
+					
+					if (Math.abs(
+							((NormalPlayer) this.world.getHumanPlayer()).getPosition().x 
+							- newPos.x  ) < SoundAssets.SOUND_RANGE)
+							this.world.getSound().playJump();
+					
+					
 					this.jumpingSinceEpoch = timeEpoch;
+					
+				}	
+					
 				if (this.isTouching() == true) {
 					currentVelocity = currentVelocity.add(0, impulse.y);
 					if (currentVelocity.y > maxVelocity.y)
@@ -209,6 +226,18 @@ public class NormalPlayer extends Player
 
 		if (fireKeyPressed) {
 			if (timeEpoch - this.firingSinceEpoch > 300) {
+				
+				//Play shot sound if close to the player
+				if (Math.abs(
+						((NormalPlayer) this.world.getHumanPlayer()).getPosition().x 
+						- newPos.x  ) < SoundAssets.SOUND_RANGE)
+				{
+					System.out.println("AMATH "+ Math.abs(
+						((NormalPlayer) this.world.getHumanPlayer()).getPosition().x 
+						- newPos.x  ) );
+						this.world.getSound().playShot();
+				}
+				
 				createBullet(playerBody.getWorld(), playerBody.getWorldCenter().x, playerBody.getWorldCenter().y,
 						playerBody.getLinearVelocity().limit(1), bulletsList);
 				this.firingSinceEpoch = timeEpoch;

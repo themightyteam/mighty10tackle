@@ -3,22 +3,7 @@ package ludum.mighty.square.world;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
-
-import ai.world.AIWorld;
+import ludum.mighty.square.assets.SoundAssets;
 import ludum.mighty.square.collisions.CollisionsListener;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.noPlayer.EnemyFactory;
@@ -35,6 +20,22 @@ import ludum.mighty.square.player.Player;
 import ludum.mighty.square.player.RecordedStep;
 import ludum.mighty.square.settings.CommonSettings;
 import net.dermetfan.gdx.physics.box2d.Box2DMapObjectParser;
+import ai.world.AIWorld;
+
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * @author Mighty Team
@@ -48,7 +49,7 @@ import net.dermetfan.gdx.physics.box2d.Box2DMapObjectParser;
 public class MightyWorld {
 
 	private ArrayList<NoPlayer> enemyList; // only needed for backwards
-											// compatibility
+	// compatibility
 	/** list of all flying bullets **/
 	private ArrayList<Bullet> bulletsList;
 
@@ -57,7 +58,7 @@ public class MightyWorld {
 	private CollisionsListener collisionListener;
 
 	/** pointer to the player drived by the human **/
-	private Player player = null;
+	Player player = null;
 	/** List of green players (human and IA drived) **/
 	private ArrayList<Player> greenTeamList;
 	/** List of violet players (human and IA drived) **/
@@ -92,7 +93,7 @@ public class MightyWorld {
 	 * future!!)
 	 */
 	long differenceEpoch;
-	
+
 	long timeToFinish;
 
 	private int curentLevel;
@@ -105,6 +106,8 @@ public class MightyWorld {
 	private Integer mapHeight;
 
 	AIWorld aiWorld;
+
+	SoundAssets sound;
 
 	/**
 	 * @return Map width.
@@ -150,7 +153,14 @@ public class MightyWorld {
 	 * @param timeToFinish
 	 */
 	public void init(TiledMap map, int level, Array<Array<RecordedStep>> allRecordedSteps, long timeToFinish,
-			AIWorld aiWorld) {
+			AIWorld aiWorld) 
+	{
+		//Load assets
+		this.sound = new SoundAssets();
+		//Start playing the song
+		this.sound.playTheme();
+
+
 		this.curentLevel = level;
 		this.greenScore = 0;
 		this.violetScore = 0;
@@ -159,10 +169,10 @@ public class MightyWorld {
 
 		this.mapWidth = prop.get("width", Integer.class);
 		this.mapHeight = prop.get("height", Integer.class);
-		
+
 		this.enemyList = new ArrayList<NoPlayer>();
 		this.bulletsList = new ArrayList<Bullet>();
-		
+
 		//Maximum time allowed to finish the level
 		this.timeToFinish = timeToFinish;
 
@@ -374,7 +384,7 @@ public class MightyWorld {
 			createPlayer(i.getX() + 1, i.getY() + 1, Player.IS_AI, Player.GREEN_TEAM);
 			createPlayer(i.getX() - 1, i.getY(), Player.IS_AI, Player.GREEN_TEAM);
 		}
-		
+
 		// create violet team with 10 AI members
 		createPlayer(121f, 5f, Player.IS_AI, Player.VIOLET_TEAM);
 		for (VioletRespawnPoint i : this.violetRespawnPointList) {
@@ -591,7 +601,7 @@ public class MightyWorld {
 				// Create a rectangle shape
 				PolygonShape box = new PolygonShape();
 				box.setAsBox(width * 0.5f, height * 0.5f); // 1 = 16 pixels = 1
-															// tile width
+				// tile width
 
 				// Create a fixture definition to apply our shape to
 				FixtureDef fixtureDef = new FixtureDef();
@@ -633,7 +643,7 @@ public class MightyWorld {
 				// Create a rectangle shape
 				PolygonShape box = new PolygonShape();
 				box.setAsBox(width * 0.5f, height * 0.5f); // 1 = 16 pixels = 1
-															// tile width
+				// tile width
 
 				// Create a fixture definition to apply our shape to
 				FixtureDef fixtureDef = new FixtureDef();
@@ -686,6 +696,14 @@ public class MightyWorld {
 		for (Body b : this.getPlayerBodysList()) {
 			Player p = (Player) b.getUserData();
 			if (p.getPlayerState() == Player.STATE_DEAD) {
+
+				//Doing death Sound
+
+				if (Math.abs(
+						((NormalPlayer) this.player).getPosition().x 
+						- ((NormalPlayer) p).getPosition().x  ) < SoundAssets.SOUND_RANGE)
+						this.sound.playDeath();
+
 				p.setPlayerState(Player.STATE_PLAYING);
 				// Respawns at a random respawn point of it's team
 				if (p.getSquareTeam() == Player.GREEN_TEAM) {
@@ -808,7 +826,7 @@ public class MightyWorld {
 	 * 
 	 * @return the active player (not from other levels)
 	 */
-	private Body getPlayer() {
+	Body getPlayer() {
 		// TODO: playerbody should be a variable in mightyworld so we don't have
 		// to do all this?
 		Array<Body> bodies = new Array<Body>();
@@ -1046,6 +1064,19 @@ public class MightyWorld {
 		this.violetBasesList = violetBasesList;
 	}
 
-	
-	
+
+	public Player getHumanPlayer()
+	{
+		return this.player;
+	}
+
+	public SoundAssets getSound() {
+		return sound;
+	}
+
+	public void setSound(SoundAssets sound) {
+		this.sound = sound;
+	}
+
+
 }
