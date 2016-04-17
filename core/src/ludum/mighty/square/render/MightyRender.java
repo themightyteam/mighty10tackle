@@ -75,7 +75,8 @@ public class MightyRender
 
 			TextureRegion playerRegion = null;
 			if ((p.getPlayerState() == Player.STATE_DEAD) || (p.getPlayerState() == Player.STATE_PARADOX)
-					|| (p.getPlayerState() == Player.STATE_TIMEOUT)) {
+					|| (p.getPlayerState() == Player.STATE_TIMEOUT) || 
+					(p.getPlayerState() == Player.STATE_ZOMBIE)) {
 				playerRegion = this.gameAssets.getAnimation(WholeGameAssets.PLAYER_GREEN_DEATH,
 						(float) ((this.gameWorld.getTimeEpoch() % 1000) / 1000.0));
 			} else {
@@ -135,7 +136,8 @@ public class MightyRender
 
 			TextureRegion playerRegion = null;
 			if ((p.getPlayerState() == Player.STATE_DEAD) || (p.getPlayerState() == Player.STATE_PARADOX)
-					|| (p.getPlayerState() == Player.STATE_TIMEOUT)) {
+					|| (p.getPlayerState() == Player.STATE_TIMEOUT) || 
+					(p.getPlayerState() == Player.STATE_ZOMBIE)) {
 				playerRegion = this.gameAssets.getAnimation(WholeGameAssets.PLAYER_GREEN_WITHFLAG_DEATH,
 						(float) ((this.gameWorld.getTimeEpoch() % 1000) / 1000.0));
 			} else {
@@ -195,7 +197,8 @@ public class MightyRender
 
 			TextureRegion playerRegion = null;
 			if ((p.getPlayerState() == Player.STATE_DEAD) || (p.getPlayerState() == Player.STATE_PARADOX)
-					|| (p.getPlayerState() == Player.STATE_TIMEOUT)) {
+					|| (p.getPlayerState() == Player.STATE_TIMEOUT) || 
+					(p.getPlayerState() == Player.STATE_ZOMBIE))  {
 				playerRegion = this.gameAssets.getAnimation(WholeGameAssets.PLAYER_VIOLET_DEATH,
 						(float) ((this.gameWorld.getTimeEpoch() % 1000) / 1000.0));
 			} else {
@@ -255,7 +258,8 @@ public class MightyRender
 
 			TextureRegion playerRegion = null;
 			if ((p.getPlayerState() == Player.STATE_DEAD) || (p.getPlayerState() == Player.STATE_PARADOX)
-					|| (p.getPlayerState() == Player.STATE_TIMEOUT)) {
+					|| (p.getPlayerState() == Player.STATE_TIMEOUT)|| 
+					(p.getPlayerState() == Player.STATE_ZOMBIE)) {
 				playerRegion = this.gameAssets.getAnimation(WholeGameAssets.PLAYER_VIOLET_WITHFLAG_DEATH,
 						(float) ((this.gameWorld.getTimeEpoch() % 1000) / 1000.0));
 			} else {

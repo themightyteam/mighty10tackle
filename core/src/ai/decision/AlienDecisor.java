@@ -85,7 +85,7 @@ public class AlienDecisor extends BasicDecisor
 
 		//If i have the flag, return always to base
 		if (this.iHaveTheFlag)
-			this.obtainMyBaseSquare(aiWorld);
+			return this.obtainMyBaseSquare(aiWorld);
 
 		if (this.currentState ==  AlienDecisor.STATE_STATUS_QUO)
 		{
@@ -133,7 +133,13 @@ public class AlienDecisor extends BasicDecisor
 		}
 
 		if (nextState == StateProp.GOTOOTHERBASE)
+		{
+			/*System.out.println("TEAM "+ aiPlayer.getSquareTeam() + " " +
+		this.obtainOtherBaseSquare(aiWorld));
+			 */
+			
 			return this.obtainOtherBaseSquare(aiWorld);
+		}
 
 		else if (nextState == StateProp.GOTOMYBASE)
 			return this.obtainMyBaseSquare(aiWorld);
@@ -175,7 +181,7 @@ public class AlienDecisor extends BasicDecisor
 		if (this.otherBase != null)
 		{
 			int baseNode = aiWorld.obtainCurrentNode(this.otherBase).getIdNode();
-
+			
 			return baseNode;
 		}
 
@@ -360,7 +366,7 @@ public class AlienDecisor extends BasicDecisor
 					{
 						this.enemyWithFlag = player;
 						
-						System.out.println(this.enemyWithFlag.getLastSeenNode().getIdNode());
+						//System.out.println(this.enemyWithFlag.getLastSeenNode().getIdNode());
 					}
 					else
 					{

@@ -84,7 +84,7 @@ public class NormalPlayer extends Player
 		this.invisible = false;
 		this.hasFlag = false;
 
-		System.out.println("ONE SQUARE PLAYER");
+	
 
 		//this.printCurrentSquare();
 	}
@@ -160,6 +160,10 @@ public class NormalPlayer extends Player
 		Vector2 newPos = playerBody.getPosition();
 		this.setPosition(new Vector2(newPos.x, newPos.y));
 
+		if ((this.getPlayerState() == STATE_ZOMBIE) ||
+			(this.getPlayerState() == STATE_DEAD))
+			return;
+			
 		Vector2 currentVelocity = playerBody.getLinearVelocity();
 		if (upKeyPressed) {
 			// TODO rethink this jumpingSinceEpoch logic (do it like

@@ -66,6 +66,7 @@ public class AINormalPlayer extends NormalPlayer
 
 		if (this.squareTeam ==  Player.GREEN_TEAM)
 		{
+		
 			this.decisor.setMyBase(new Vector2(
 			world.getGreenBasesList().get(0).getX(), 
 			world.getGreenBasesList().get(0).getY()));
@@ -73,7 +74,7 @@ public class AINormalPlayer extends NormalPlayer
 			this.decisor.setOtherBase(new Vector2(
 					world.getVioletBasesList().get(0).getX(), 
 					world.getVioletBasesList().get(0).getY()));
-					
+		
 		}
 		else
 		{
@@ -87,6 +88,7 @@ public class AINormalPlayer extends NormalPlayer
 			world.getGreenBasesList().get(0).getX(), 
 			world.getGreenBasesList().get(0).getY()));
 			
+		
 
 		}
 	}

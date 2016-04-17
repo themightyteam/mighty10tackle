@@ -114,6 +114,8 @@ public class SoundAssets
 	
 	public void disposeObjects()
 	{
+		this.themeSong.stop();
+		
 		this.themeSong.dispose();
 		this.deathSound.dispose();
 		

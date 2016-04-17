@@ -307,11 +307,11 @@ public class MightyWorld {
 		NormalPlayer tempPlayer = null;
 
 		if (isHuman == Player.IS_HUMAN) {
-			tempPlayer = new NormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
+			tempPlayer = new NormalPlayer(0, team, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
 			tempPlayer.setHumanControlled(true);
 			this.player = tempPlayer;
 		} else {
-			tempPlayer = new AINormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
+			tempPlayer = new AINormalPlayer(0, team, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
 			tempPlayer.setHumanControlled(false);
 		}
 
@@ -708,42 +708,56 @@ public class MightyWorld {
 				if (Math.abs(
 						((NormalPlayer) this.player).getPosition().x 
 						- ((NormalPlayer) p).getPosition().x  ) < SoundAssets.SOUND_RANGE)
-						this.sound.playDeath();
+					this.sound.playDeath();
 
-				p.setPlayerState(Player.STATE_PLAYING);
-				// Respawns at a random respawn point of it's team
-				if (p.getSquareTeam() == Player.GREEN_TEAM) {
-					if (p.hasFlag() == true) {
-						// restores the flag
-						p.setHasFlag(false);
-						p.setHasScored(false);
-						this.violetFlagsList.get(0).setTaken(false);
+				p.setPlayerState(Player.STATE_ZOMBIE);
+
+				p.setTimeDeath(TimeUtils.millis());
+
+			} else if (p.getPlayerState() == Player.STATE_ZOMBIE)
+			{
+				if ((TimeUtils.millis() - p.getTimeDeath() > Player.TIME_TILL_RESPAWN))
+				{
+					p.setPlayerState(Player.STATE_PLAYING);
+
+					// Respawns at a random respawn point of it's team
+					if (p.getSquareTeam() == Player.GREEN_TEAM) {
+						if (p.hasFlag() == true) {
+							// restores the flag
+							p.setHasFlag(false);
+							p.setHasScored(false);
+							this.violetFlagsList.get(0).setTaken(false);
+						}
+						int x = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getX();
+						int y = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getY();
+						this.activeGreenRespawnPoint -= 1;
+						if (this.activeGreenRespawnPoint < 0) {
+							this.activeGreenRespawnPoint = this.greenRespawnPointList.size() - 1;
+						}
+						b.setTransform(x, y, 0);
+						p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 					}
-					int x = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getX();
-					int y = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getY();
-					this.activeGreenRespawnPoint -= 1;
-					if (this.activeGreenRespawnPoint < 0) {
-						this.activeGreenRespawnPoint = this.greenRespawnPointList.size() - 1;
+					else
+					{
+
+						if (p.hasFlag() == true) {
+							// restores the flag
+							p.setHasFlag(false);
+							p.setHasScored(false);
+							this.greenFlagsList.get(0).setTaken(false);
+						}
+						int x = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getX();
+						int y = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getY();
+						this.activeVioletRespawnPoint -= 1;
+						if (this.activeVioletRespawnPoint < 0) {
+							this.activeVioletRespawnPoint = this.violetRespawnPointList.size() - 1;
+						}
+						b.setTransform(x, y, 0);
+						p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 					}
-					b.setTransform(x, y, 0);
-					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
-				} else {
-					if (p.hasFlag() == true) {
-						// restores the flag
-						p.setHasFlag(false);
-						p.setHasScored(false);
-						this.greenFlagsList.get(0).setTaken(false);
-					}
-					int x = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getX();
-					int y = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getY();
-					this.activeVioletRespawnPoint -= 1;
-					if (this.activeVioletRespawnPoint < 0) {
-						this.activeVioletRespawnPoint = this.violetRespawnPointList.size() - 1;
-					}
-					b.setTransform(x, y, 0);
-					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 				}
 			}
+
 			if (p.hasScored() == true) {
 				if (p.getSquareTeam() == Player.GREEN_TEAM) {
 					p.setHasFlag(false);
@@ -1108,6 +1122,6 @@ public class MightyWorld {
 		this.violetScore = violetScore;
 	}
 
-	
+
 
 }

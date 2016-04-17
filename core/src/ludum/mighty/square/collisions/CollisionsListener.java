@@ -174,7 +174,7 @@ public class CollisionsListener implements ContactListener {
 			if (p.hasFlag() == true) {
 				
 				NormalPlayer normalPlayer = ((NormalPlayer) p);
-				normalPlayer.getWorld().getSound().playFlagInBase();
+				normalPlayer.getWorld().getSound().playChideSound();
 				
 				p.setHasScored(true);
 			}
@@ -183,7 +183,7 @@ public class CollisionsListener implements ContactListener {
 			if (p.hasFlag() == true) {
 				
 				NormalPlayer normalPlayer = ((NormalPlayer) p);
-				normalPlayer.getWorld().getSound().playFlagInBase();
+				normalPlayer.getWorld().getSound().playChideSound();
 				
 				p.setHasScored(true);
 			}
