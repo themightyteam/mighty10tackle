@@ -1,10 +1,10 @@
-package ludum.mighty.paradox.client;
+package ludum.mighty.square.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 
-import ludum.mighty.square.MightyGameDefault;
+import ludum.mighty.square.game.MightyGame;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -15,6 +15,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                return new MightyGameDefault();
+		return new MightyGame();
         }
 }

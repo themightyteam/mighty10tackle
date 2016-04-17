@@ -1,4 +1,4 @@
-package ludum.mighty.paradox.desktop;
+package ludum.mighty.melee.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;

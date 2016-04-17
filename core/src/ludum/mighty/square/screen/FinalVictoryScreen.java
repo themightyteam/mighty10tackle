@@ -14,7 +14,7 @@ public class FinalVictoryScreen extends DefaultScreen {
 	public FinalVictoryScreen(Game game) {
 		super(game);
 		this.batch = new SpriteBatch();
-		this.img = new Texture("./badlogic.jpg");
+		this.img = new Texture("./paradox.jpg");
 		System.out.println("You have won!!!");
 	}
 

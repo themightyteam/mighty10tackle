@@ -6,7 +6,7 @@
 	<inherits name='libgdx-utils-box2d' />
 
 	<inherits name='MightyGame' />
-	<entry-point class='ludum.mighty.paradox.client.HtmlLauncher' />
+	<entry-point class='ludum.mighty.square.client.HtmlLauncher' />
 	
 	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
 </module>

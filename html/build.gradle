@@ -7,8 +7,8 @@ gwt {
     minHeapSize="1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
-    modules 'ludum.mighty.paradox.GdxDefinition'
-    devModules 'ludum.mighty.paradox.GdxDefinitionSuperdev'
+    modules 'ludum.mighty.square.GdxDefinition'
+    devModules 'ludum.mighty.square.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
     compiler {
