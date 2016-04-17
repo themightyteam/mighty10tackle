@@ -69,6 +69,9 @@ public class CollisionsListener implements ContactListener {
 		} else if (typeOfCollision == this.COLLISION_TYPE_BULLET_BULLET) {
 			((Bullet) body1.getUserData()).declareRemovable();
 			((Bullet) body2.getUserData()).declareRemovable();
+		} else if (typeOfCollision == this.COLLISION_TYPE_BULLET_PLAYER) {
+			((Bullet) body1.getUserData()).declareRemovable();
+			((Player) body2.getUserData()).setPlayerState(Player.STATE_DEAD);
 		}
 		
 		Player player = null;
