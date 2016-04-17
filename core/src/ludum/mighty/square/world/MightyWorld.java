@@ -573,6 +573,8 @@ public class MightyWorld {
 
 			if (team.equalsIgnoreCase("green")) {
 				GreenBase gB = (GreenBase) EnemyFactory.buildEnemy("GREENBASE 5000 -1 1000;0 1000 17 38 17 38 1 55");
+				gB.setX(x);
+				gB.setY(y);
 				this.greenBasesList.add(gB);
 				// create Box2D objects related to the body:
 				// First we create a body definition
@@ -613,6 +615,8 @@ public class MightyWorld {
 
 			} else if (team.equalsIgnoreCase("violet")) {
 				VioletBase vB = (VioletBase) EnemyFactory.buildEnemy("VIOLETBASE 5000 -1 1000;0 1000 17 38 17 38 1 55");
+				vB.setX(x);
+				vB.setY(y);
 				this.violetBasesList.add(vB);
 				// create Box2D objects related to the body:
 				// First we create a body definition
