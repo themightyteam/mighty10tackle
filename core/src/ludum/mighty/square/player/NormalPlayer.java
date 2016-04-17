@@ -43,6 +43,9 @@ public class NormalPlayer extends Player
 	PathNode lastSeenNode;
 
 	AIWorld aiWorld;
+	
+	ArrayList<Player> greenTeamList;
+	ArrayList<Player> violetTeamList;
 
 	public NormalPlayer() {
 	};
@@ -50,8 +53,16 @@ public class NormalPlayer extends Player
 	public NormalPlayer(int type, 
 			int squareTeam, 
 			Vector2 initPosition,
-			AIWorld aiWorld)
+			AIWorld aiWorld, 
+			ArrayList<Player> myTeamList,
+			ArrayList<Player> enemyList
+			)
 	{
+		//Update the lists
+		this.greenTeamList = myTeamList;
+		this.violetTeamList = enemyList;
+		
+		
 		this.type = type;
 		this.squareTeam = squareTeam;		
 

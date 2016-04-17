@@ -13,7 +13,7 @@
    eJztXMtuAyEM3Fx6yf//b3toJISwPbYHzG4YCSW8bGOGcS7tdR0cHBwcHBwcHBwcHBwcHBzMwfuvvf7bu+mPPvt5qT9q0prWRx8HakOLqz8XEqvWDjBEufK6xlyQvms2PJyUuG7t9e57UqsAyiXr3Vt7LQ56uKbF0uufl8NPbBXYLR4GrLNU3RnL9h159Q2o1gGG3bvwKrLnjlys5pQUh7UOtXM3Xq2Ov7cp+ejXeGyv4BRb1yJ7K8DiFPscKK+sOW19llfaWNuvwq68qq4VGt7NZ+8TvfsZeuR5D7NR7Vsaj+R7Ja96bvXfR/12rDLvEXjf8m68YuQ9eyZrv7dWSXtXAz2TNufhVBWvXkV+R/DmbbTn6tZW1CWL42hNRtYgXKxANa9bRHh1DeZX8ygDJq92qoOSXnl0lhG7N2/oG2Xn1qMXEXtMVOtVZA8ztzPBiC2qF177bOyoVxI8Oa7m2ko+obUrg0gNrNSrTD1n8msXTjLOxuZVJoYKSH69OWHp1WwtjGjMqjjY73ZHXkVtMd4naoNtH/U544wzuPUUXll+ovo36l9XPHaUVxHuZfOZ5evIVgUyfmfH3d9x+6n5l7jQ9629kk8rXkZOn8CriH9GLUD9tP5Gc6iNto/yCvU5oz5GsepurBhGY9o4Ut+zvw36+LzaMbIhxeb1GbkrzWc0N6jPCnhyvppXmZrU2xnZtNZL52LjG3j1GauKp4/Bk29Lf1h+R2tXIpuPFdiRV1mdG9mz/KAxMMDSIY/erwbKcy1G68144mDXgtb2CiDxzuIpOr4C7HikOuHVhaoakwVSM62zeXOg6cATeSXZr8RMzs6sm4hfdHwFNJ5HfneM+kx43q9Wm5naOFtv0brq3TcTd9OrSA1Ba1KGE1W1HHk/FdiR56hOWvOspvnZGbvdozTG8hXlBAM78CHD44iGVgDVK/Sud3/P1bmelR/tvipgcWO1b89e9I4yc5qf1b+lNOz4e6bvR+L5AX157grZZ8WJaisDLH5ZuZRyJK2rQDSeyD0zuBGpxd6WRcReNp7R2t14hexh3420x2sryynv22Agm08td5W8QvI4yz4T3lrH0hRPfKvzsaNeMd7m7LOhGhOZk/xka9W38Gr3Fj1Tdq763FX5Y6D6zNGm/Z324VU9r+7yP817fLg14pvEw7vcyR3xC1skVVQ=
   </data>
  </layer>
- <objectgroup name="physics">
+ <objectgroup name="physics" visible="0">
   <object id="314" name="suelo1" type="object" x="495" y="624" width="48" height="16">
    <properties>
     <property name="bodyType" value="StaticBody"/>
@@ -1225,7 +1225,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="pathfinding" visible="0">
+ <objectgroup name="pathfinding">
   <properties>
    <property name="unitScale" value="0"/>
   </properties>
@@ -2993,21 +2993,21 @@
     <property name="normalList" value=""/>
    </properties>
   </object>
-  <object id="879" name="253" type="object" x="1580" y="429.867" width="27.8333" height="15.9091">
+  <object id="879" name="253" type="object" x="1598" y="418.867" width="27.8333" height="15.9091">
    <properties>
     <property name="jumpList" value="195, 193"/>
     <property name="landingList" value="202, 195, 193"/>
     <property name="normalList" value=""/>
    </properties>
   </object>
-  <object id="880" name="254" type="object" x="1492" y="641.367" width="26.1667" height="15.9091">
+  <object id="880" name="254" type="object" x="1509" y="662.367" width="26.1667" height="15.9091">
    <properties>
     <property name="jumpList" value="225,223"/>
     <property name="landingList" value="223,225"/>
     <property name="normalList" value="227"/>
    </properties>
   </object>
-  <object id="881" name="255" type="object" x="1769.33" y="654.867" width="35.3333" height="15.9091">
+  <object id="881" name="255" type="object" x="1779.33" y="646.867" width="35.3333" height="15.9091">
    <properties>
     <property name="jumpList" value="234,236,237"/>
     <property name="landingList" value="236,237,234"/>
