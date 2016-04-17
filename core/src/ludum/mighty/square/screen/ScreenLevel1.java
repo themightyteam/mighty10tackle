@@ -157,7 +157,11 @@ public class ScreenLevel1 extends DefaultScreen {
 				(this.state == STATE_DRAW))
 		{	
 			if (currentTime - this.epochsInDead > CommonSettings.MSWAIT_AFTER_DEAD)
+			{
+				this.gameWorld.getSound().disposeObjects();	
+				
 				this.mightyGame.setScreen(new ScreenLevel1(this.mightyGame));
+			}
 		}
 
 	}

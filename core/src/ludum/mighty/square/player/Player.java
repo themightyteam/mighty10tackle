@@ -28,7 +28,7 @@ public class Player {
 	public static final int STATE_TIMEOUT = 5;
 	public static final int STATE_ZOMBIE = 6;
 	
-	public static final long TIME_TILL_RESPAWN = 5000;  //FIXME: change location of here
+	public static final long TIME_TILL_RESPAWN = 3000;  //FIXME: change location of here
 
 	private boolean isReplaying;
 	private int activeInLevel; // the level where the user controls this player
@@ -266,6 +266,14 @@ public class Player {
 			}
 		}
 		return new RecordedStep(timeEpoch, -1, -1, false);
+	}
+
+	public long getTimeDeath() {
+		return timeDeath;
+	}
+
+	public void setTimeDeath(long timeDeath) {
+		this.timeDeath = timeDeath;
 	}
 
 

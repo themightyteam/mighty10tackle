@@ -1714,14 +1714,14 @@
   </object>
   <object id="682" name="69" type="object" x="431.333" y="526.951" width="15.6667" height="15.9091">
    <properties>
-    <property name="jumpList" value="71,32"/>
+    <property name="jumpList" value="32,72,62"/>
     <property name="landingList" value="70,73"/>
     <property name="normalList" value=""/>
    </properties>
   </object>
   <object id="683" name="70" type="object" x="400" y="558.951" width="15.6667" height="15.9091">
    <properties>
-    <property name="jumpList" value="32,69,71"/>
+    <property name="jumpList" value="31,71,62"/>
     <property name="landingList" value="73"/>
     <property name="normalList" value=""/>
    </properties>

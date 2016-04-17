@@ -48,6 +48,12 @@ import net.dermetfan.gdx.physics.box2d.Box2DMapObjectParser;
  */
 public class MightyWorld {
 
+	//Score Catching the flag and returning to base
+	public static final int FIRST_DOWN = 1;
+	
+	//Score Catching the flag and returning to base
+	public static final int TOUCH_DOWN = 3;
+
 	private ArrayList<NoPlayer> enemyList; // only needed for backwards
 	// compatibility
 	/** list of all flying bullets **/
@@ -93,6 +99,8 @@ public class MightyWorld {
 	public static final int SCORE_STATUS_GREEN_NOTHING = 0;
 	public static final int SCORE_STATUS_GREEN_HAS_FLAG = 1;
 	public static final int SCORE_STATUS_GREEN_HAS_SCORED = 2;
+	/** when the green team last scored (to restore scoreGreenStatus)**/
+	private long scoreGreenUpdateTime;
 
 	public int getScoreGreenStatus() {
 		return this.scoreGreenStatus;
@@ -100,9 +108,11 @@ public class MightyWorld {
 
 	/** status of the score of the violet team in the game **/
 	private int scoreVioletStatus;
-	public static final int SCORE_STATUS_VIOLET_NOTHING = 0;
-	public static final int SCORE_STATUS_VIOLET_HAS_FLAG = 1;
-	public static final int SCORE_STATUS_VIOLET_HAS_SCORED = 2;
+	public static final int SCORE_STATUS_VIOLET_NOTHING = 3;
+	public static final int SCORE_STATUS_VIOLET_HAS_FLAG = 4;
+	public static final int SCORE_STATUS_VIOLET_HAS_SCORED = 5;
+	/** when the green team last scored (to restore scoreGreenStatus) **/
+	private long scoreVioletUpdateTime;
 
 	public int getScoreVioletStatus() {
 		return this.scoreVioletStatus;
@@ -188,6 +198,11 @@ public class MightyWorld {
 		this.curentLevel = level;
 		this.greenScore = 0;
 		this.violetScore = 0;
+
+		this.scoreGreenStatus = SCORE_STATUS_GREEN_NOTHING;
+		this.scoreGreenUpdateTime = TimeUtils.millis();
+		this.scoreVioletStatus = SCORE_STATUS_VIOLET_NOTHING;
+		this.scoreVioletUpdateTime = TimeUtils.millis();
 
 		MapProperties prop = map.getProperties();
 
@@ -327,11 +342,11 @@ public class MightyWorld {
 		NormalPlayer tempPlayer = null;
 
 		if (isHuman == Player.IS_HUMAN) {
-			tempPlayer = new NormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
+			tempPlayer = new NormalPlayer(0, team, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
 			tempPlayer.setHumanControlled(true);
 			this.player = tempPlayer;
 		} else {
-			tempPlayer = new AINormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
+			tempPlayer = new AINormalPlayer(0, team, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
 			tempPlayer.setHumanControlled(false);
 		}
 
@@ -728,51 +743,71 @@ public class MightyWorld {
 				if (Math.abs(
 						((NormalPlayer) this.player).getPosition().x 
 						- ((NormalPlayer) p).getPosition().x  ) < SoundAssets.SOUND_RANGE)
-						this.sound.playDeath();
 
-				p.setPlayerState(Player.STATE_PLAYING);
-				// Respawns at a random respawn point of it's team
-				if (p.getSquareTeam() == Player.GREEN_TEAM) {
-					if (p.hasFlag() == true) {
-						// restores the flag
-						p.setHasFlag(false);
-						p.setHasScored(false);
-						this.violetFlagsList.get(0).setTaken(false);
-						this.scoreVioletStatus = this.SCORE_STATUS_VIOLET_NOTHING;
+					this.sound.playDeath();
+
+				p.setPlayerState(Player.STATE_ZOMBIE);
+
+				p.setTimeDeath(TimeUtils.millis());
+
+			} else if (p.getPlayerState() == Player.STATE_ZOMBIE)
+			{
+				if ((TimeUtils.millis() - p.getTimeDeath() > Player.TIME_TILL_RESPAWN))
+				{
+					p.setPlayerState(Player.STATE_PLAYING);
+
+					// Respawns at a random respawn point of it's team
+					if (p.getSquareTeam() == Player.GREEN_TEAM) {
+						if (p.hasFlag() == true) {
+							// restores the flag
+							p.setHasFlag(false);
+							p.setHasScored(false);
+							this.violetFlagsList.get(0).setTaken(false);
+							this.scoreGreenStatus = SCORE_STATUS_GREEN_NOTHING;
+						}
+						int x = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getX();
+						int y = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getY();
+						this.activeGreenRespawnPoint -= 1;
+						if (this.activeGreenRespawnPoint < 0) {
+							this.activeGreenRespawnPoint = this.greenRespawnPointList.size() - 1;
+						}
+						b.setTransform(x, y, 0);
+						p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 					}
-					int x = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getX();
-					int y = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getY();
-					this.activeGreenRespawnPoint -= 1;
-					if (this.activeGreenRespawnPoint < 0) {
-						this.activeGreenRespawnPoint = this.greenRespawnPointList.size() - 1;
+					else
+					{
+
+						if (p.hasFlag() == true) {
+							// restores the flag
+							p.setHasFlag(false);
+							p.setHasScored(false);
+							this.greenFlagsList.get(0).setTaken(false);
+
+							this.scoreVioletStatus = SCORE_STATUS_VIOLET_NOTHING;
+						}
+						int x = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getX();
+						int y = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getY();
+						this.activeVioletRespawnPoint -= 1;
+						if (this.activeVioletRespawnPoint < 0) {
+							this.activeVioletRespawnPoint = this.violetRespawnPointList.size() - 1;
+						}
+						b.setTransform(x, y, 0);
+						p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
+
 					}
-					b.setTransform(x, y, 0);
-					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
-				} else {
-					if (p.hasFlag() == true) {
-						// restores the flag
-						p.setHasFlag(false);
-						p.setHasScored(false);
-						this.greenFlagsList.get(0).setTaken(false);
-						this.scoreGreenStatus = this.SCORE_STATUS_GREEN_NOTHING;
-					}
-					int x = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getX();
-					int y = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getY();
-					this.activeVioletRespawnPoint -= 1;
-					if (this.activeVioletRespawnPoint < 0) {
-						this.activeVioletRespawnPoint = this.violetRespawnPointList.size() - 1;
-					}
-					b.setTransform(x, y, 0);
-					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 				}
 			}
+
 			if (p.hasScored() == true) {
 				if (p.getSquareTeam() == Player.GREEN_TEAM) {
 					p.setHasFlag(false);
 					p.setHasScored(false);
 					this.violetFlagsList.get(0).setTaken(false);
-					this.greenScore += 1;
-					this.scoreGreenStatus = this.SCORE_STATUS_GREEN_HAS_SCORED;
+
+					this.scoreGreenStatus = SCORE_STATUS_GREEN_HAS_SCORED;
+					this.scoreGreenUpdateTime = TimeUtils.millis();
+
+					this.greenScore += TOUCH_DOWN;
 					// System.out.println(
 					// "Green team scores!! GreenTeam " + this.greenScore + " -
 					// Violet Team " + this.violetScore);
@@ -780,11 +815,34 @@ public class MightyWorld {
 					p.setHasFlag(false);
 					p.setHasScored(false);
 					this.greenFlagsList.get(0).setTaken(false);
-					this.violetScore += 1;
-					this.scoreVioletStatus = this.SCORE_STATUS_VIOLET_HAS_SCORED;
+
+					this.scoreVioletStatus = SCORE_STATUS_VIOLET_HAS_SCORED;
+					this.scoreVioletUpdateTime = TimeUtils.millis();
+
+					this.violetScore += TOUCH_DOWN;
 					// System.out.println(
 					// "Violet team scores!! GreenTeam " + this.greenScore + " -
 					// Violet Team " + this.violetScore);
+				}
+			}
+
+			if (p.hasFlag() == true) {
+				if (p.getSquareTeam() == Player.GREEN_TEAM) {
+					this.scoreGreenStatus = SCORE_STATUS_GREEN_HAS_FLAG;
+				} else {
+					this.scoreVioletStatus = SCORE_STATUS_VIOLET_HAS_FLAG;
+				}
+			}
+
+			long t = TimeUtils.millis();
+			if (t > this.scoreGreenUpdateTime + 5000) {
+				if (this.scoreGreenStatus == SCORE_STATUS_GREEN_HAS_SCORED) {
+					this.scoreGreenStatus = SCORE_STATUS_GREEN_NOTHING;
+				}
+			}
+			if (t > this.scoreVioletUpdateTime + 5000) {
+				if (this.scoreVioletStatus == SCORE_STATUS_VIOLET_HAS_SCORED) {
+					this.scoreVioletStatus = SCORE_STATUS_VIOLET_NOTHING;
 				}
 			}
 		}
@@ -1132,6 +1190,6 @@ public class MightyWorld {
 		this.violetScore = violetScore;
 	}
 
-	
+
 
 }
