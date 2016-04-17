@@ -2,10 +2,8 @@ package ludum.mighty.square.player;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-
-import ai.decision.BasicDecissor;
+import ludum.mighty.square.noPlayer.Bullet;
+import ai.decision.AlienDecisor;
 import ai.movement.steering.BasicSteering;
 import ai.pathfinding.AStar;
 import ai.pathfinding.commons.Connection2D;
@@ -14,14 +12,18 @@ import ai.pathfinding.commons.PredictedPath;
 import ai.pathfinding.heu.EstimatedCostHeuristic;
 import ai.pathfinding.heu.EuclideanDistanceHeuristic;
 import ai.world.AIWorld;
-import ludum.mighty.square.noPlayer.Bullet;
+
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class AINormalPlayer extends NormalPlayer 
 {
 
-	BasicDecissor decisor = new BasicDecissor();
-	BasicSteering steering = new BasicSteering();
 
+
+	AlienDecisor decisor = new AlienDecisor();
+	BasicSteering steering = new BasicSteering();
 
 	AStar pathFinder;
 	PredictedPath currentPath;
@@ -33,12 +35,19 @@ public class AINormalPlayer extends NormalPlayer
 
 	EstimatedCostHeuristic heuristic;
 
+	public static final double BIG_JUMP = 2;
+	public static final double CLOSE_BUT_HIGH = 0.02;
+	public static final long TIME_FOR_KICK = 3000;
+
 	public AINormalPlayer(int type, int squareTeam, Vector2 initPosition,
-			AIWorld aiWorld) 
+			AIWorld aiWorld, ArrayList<Player> myTeamList,
+			ArrayList<Player> enemyList) 
 	{
-		super(type, squareTeam, initPosition, aiWorld);
+		super(type, squareTeam, initPosition, aiWorld, myTeamList, enemyList);
 
 		//TODO Init AI here
+		
+		this.name = "AI";
 
 		this.currentPath = null;
 
@@ -51,12 +60,14 @@ public class AINormalPlayer extends NormalPlayer
 		this.obtainPath();
 
 		this.deleteNodesFromTarget();
+
+
 	}
 
 
 	private void obtainPath()
 	{
-		int newTransition = this.decisor.getTransition(this.aiWorld, this.currentPath);
+		int newTransition = this.decisor.getTransition(this.aiWorld, this);
 
 		if ((newTransition != -1) && this.lastSeenNode != null )
 		{
@@ -84,7 +95,7 @@ public class AINormalPlayer extends NormalPlayer
 
 			if (!this.currentPath.getPredConn().isEmpty())
 			{
-			
+
 
 				if (this.currentPath.getPredConn().get(0).getSinkNodeId() != 
 						this.lastSeenNode.getIdNode())
@@ -114,23 +125,57 @@ public class AINormalPlayer extends NormalPlayer
 				}
 			}
 
-	
+
 
 	}
+
+	public void checkForKick()
+	{
+		if (this.lastSeenNode != null)
+		{
+			if (this.lastNodeId == -1)
+			{
+				this.lastNodeId = this.lastSeenNode.getIdNode();
+				this.timeStartNode = TimeUtils.millis();
+			} else if (lastSeenNode.getIdNode() == this.lastNodeId)
+			{
+				//Check if too much time in a node
+				if (this.timeStartNode > AINormalPlayer.TIME_FOR_KICK)
+				{
+					//Kicking
+					if (this.currentPath != null)
+						this.currentPath.getPredConn().clear();
+					this.timeStartNode = TimeUtils.millis();
+				}
+			}
+			else
+			{
+				//Node update and timer reset
+				this.lastNodeId = this.lastSeenNode.getIdNode();
+				this.timeStartNode = TimeUtils.millis();
+			}
+		}
+	}
+
 
 	@Override
 	public void setPosition(Vector2 position) 
 	{
 		super.setPosition(position);
 
-
+		this.checkForKick();
+		
 		this.obtainPath();
 
 		this.deleteNodesFromTarget();
-		if (this.currentPath != null)
-			if (!this.currentPath.getPredConn().isEmpty())
-				System.out.println("Next Node In Path "+ this.currentPath.getPredConn()
-						.get(0).getSinkNodeId() + " CURR "+ this.lastSeenNode.getIdNode());
+
+		/*//Uncomment for debug
+	if (this.currentPath != null)
+		if (!this.currentPath.getPredConn().isEmpty())
+			System.out.println("Next Node In Path "+ this.currentPath.getPredConn()
+					.get(0).getSinkNodeId() + " CURR "+ this.lastSeenNode.getIdNode());
+
+		 */
 	}
 
 	@Override
@@ -141,6 +186,7 @@ public class AINormalPlayer extends NormalPlayer
 		// Update position
 		Vector2 newPos = playerBody.getPosition();
 		this.setPosition(new Vector2(newPos.x, newPos.y));
+
 
 		//Picking the node 
 		if (this.currentTarget != null)
@@ -154,14 +200,25 @@ public class AINormalPlayer extends NormalPlayer
 			else if (newSteering.x > 0)
 				rightKeyPressed = true;
 
+
+
 			if ( ( newSteering.y < 0) && this.targetIsJump ) 
 			{
 				upKeyPressed = true;
 			}
 			else if ( newSteering.y <= 0)
 			{
+
+
 				upKeyPressed = false;
-				downKeyPressed = true;
+
+				if ((Math.abs(this.currentTarget.x - this.position.x)) >
+				(Math.abs(this.currentTarget.y - this.position.y)))
+				{
+					upKeyPressed = true;
+				}
+				else
+					downKeyPressed = true;
 			}
 
 			if (newSteering.y > 0)
@@ -176,8 +233,8 @@ public class AINormalPlayer extends NormalPlayer
 				{
 					upKeyPressed = false;
 				}
-			
-			if (Math.abs(newSteering.x/newSteering.y) < 0.02)
+
+			if (Math.abs(newSteering.x/newSteering.y) < AINormalPlayer.CLOSE_BUT_HIGH)
 			{
 				//Cancel the x
 				leftKeyPressed = false;
@@ -190,7 +247,30 @@ public class AINormalPlayer extends NormalPlayer
 					downKeyPressed,
 					leftKeyPressed, 
 					rightKeyPressed,
- fireKeyPressed, bulletsList);
+					fireKeyPressed, 
+					bulletsList
+					);
+		}
+		else 
+		{
+			//Avoid floating objects
+			this.currentTarget = this.position;
 		}
 	}
+
+
+	public PredictedPath getCurrentPath() {
+		return currentPath;
+	}
+
+
+	public void setCurrentPath(PredictedPath currentPath) {
+		this.currentPath = currentPath;
+	}
+
+
+
+
+
+
 }

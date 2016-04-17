@@ -293,11 +293,11 @@ public class MightyWorld {
 		NormalPlayer tempPlayer = null;
 
 		if (isHuman == Player.IS_HUMAN) {
-			tempPlayer = new NormalPlayer(0, 0, new Vector2(x, y), this.aiWorld);
+			tempPlayer = new NormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList);
 			tempPlayer.setHumanControlled(true);
 			this.player = tempPlayer;
 		} else {
-			tempPlayer = new AINormalPlayer(0, 0, new Vector2(x, y), this.aiWorld);
+			tempPlayer = new AINormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList);
 			tempPlayer.setHumanControlled(false);
 		}
 

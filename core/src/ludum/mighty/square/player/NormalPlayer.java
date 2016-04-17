@@ -38,8 +38,15 @@ public class NormalPlayer extends Player
 	Vector2 position;
 
 	PathNode lastSeenNode;
+	long timeStartNode = 0;
+	int lastNodeId = -1;
 
 	AIWorld aiWorld;
+	
+	ArrayList<Player> greenTeamList;
+	ArrayList<Player> violetTeamList;
+	
+	String name = "HUMAN";
 
 	public NormalPlayer() {
 	};
@@ -47,8 +54,16 @@ public class NormalPlayer extends Player
 	public NormalPlayer(int type, 
 			int squareTeam, 
 			Vector2 initPosition,
-			AIWorld aiWorld)
+			AIWorld aiWorld, 
+			ArrayList<Player> myTeamList,
+			ArrayList<Player> enemyList
+			)
 	{
+		//Update the lists
+		this.greenTeamList = myTeamList;
+		this.violetTeamList = enemyList;
+		
+		
 		this.type = type;
 		this.squareTeam = squareTeam;		
 
@@ -58,22 +73,24 @@ public class NormalPlayer extends Player
 
 		//Detect the square in which the player is located	
 		this.lastSeenNode = this.aiWorld.obtainCurrentNode(this.position);
-
-
-
+		
 		this.invisible = false;
 		this.hasFlag = false;
 
 		System.out.println("ONE SQUARE PLAYER");
 
-		this.printCurrentSquare();
+		//this.printCurrentSquare();
 	}
 
 	public void printCurrentSquare() {
+		if (this.name .equals("HUMAN"))
+		{
+		
 		if (this.lastSeenNode != null)
-			System.out.println("CURS " + this.lastSeenNode.getIdNode());
+			System.out.println(this.name + " CURS " + this.lastSeenNode.getIdNode());
 		else
-			System.out.println("CURS NULL");
+			System.out.println(this.name + " CURS NULL");
+		}
 	}
 
 	/**
@@ -103,9 +120,11 @@ public class NormalPlayer extends Player
 		if (newNode != null) {
 			// Updating the node
 			this.lastSeenNode = newNode;
-
-			this.printCurrentSquare();
+			
+			
 		}
+		
+		this.printCurrentSquare();
 	}
 
 	/**
@@ -245,4 +264,48 @@ public class NormalPlayer extends Player
 		bulletsList.add(bullet);
 	}
 
+	
+	//Getters and setters
+	public boolean isHasFlag() {
+		return hasFlag;
+	}
+
+	public void setHasFlag(boolean hasFlag) {
+		this.hasFlag = hasFlag;
+	}
+
+	public int getSquareTeam() {
+		return squareTeam;
+	}
+
+	public void setSquareTeam(int squareTeam) {
+		this.squareTeam = squareTeam;
+	}
+
+	public ArrayList<Player> getGreenTeamList() {
+		return greenTeamList;
+	}
+
+	public void setGreenTeamList(ArrayList<Player> greenTeamList) {
+		this.greenTeamList = greenTeamList;
+	}
+
+	public ArrayList<Player> getVioletTeamList() {
+		return violetTeamList;
+	}
+
+	public void setVioletTeamList(ArrayList<Player> violetTeamList) {
+		this.violetTeamList = violetTeamList;
+	}
+
+	public PathNode getLastSeenNode() {
+		return lastSeenNode;
+	}
+
+	public void setLastSeenNode(PathNode lastSeenNode) {
+		this.lastSeenNode = lastSeenNode;
+	}
+
+	
+	
 }

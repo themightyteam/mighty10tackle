@@ -1225,7 +1225,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="pathfinding" visible="0">
+ <objectgroup name="pathfinding">
   <properties>
    <property name="unitScale" value="0"/>
   </properties>
@@ -2993,21 +2993,21 @@
     <property name="normalList" value=""/>
    </properties>
   </object>
-  <object id="879" name="253" type="object" x="1580" y="429.867" width="27.8333" height="15.9091">
+  <object id="879" name="253" type="object" x="1598" y="418.867" width="27.8333" height="15.9091">
    <properties>
     <property name="jumpList" value="195, 193"/>
     <property name="landingList" value="202, 195, 193"/>
     <property name="normalList" value=""/>
    </properties>
   </object>
-  <object id="880" name="254" type="object" x="1492" y="641.367" width="26.1667" height="15.9091">
+  <object id="880" name="254" type="object" x="1509" y="662.367" width="26.1667" height="15.9091">
    <properties>
     <property name="jumpList" value="225,223"/>
     <property name="landingList" value="223,225"/>
     <property name="normalList" value="227"/>
    </properties>
   </object>
-  <object id="881" name="255" type="object" x="1769.33" y="654.867" width="35.3333" height="15.9091">
+  <object id="881" name="255" type="object" x="1779.33" y="646.867" width="35.3333" height="15.9091">
    <properties>
     <property name="jumpList" value="234,236,237"/>
     <property name="landingList" value="236,237,234"/>

@@ -1,38 +1,44 @@
 package ai.decision;
 
+import ludum.mighty.square.player.AINormalPlayer;
 import ai.pathfinding.commons.PredictedPath;
 import ai.world.AIWorld;
 
-public class BasicDecissor 
+import com.badlogic.gdx.math.Vector2;
+
+public class BasicDecisor 
 {
+	
+	
 
 	//Returns a random target if none available
-	
-	public int obtainNextTarget(AIWorld aiWorld)
+	private int obtainNextPathNode(AIWorld aiWorld)
 	{
 		int nextNode = (int) Math.floor(Math.random() * aiWorld.getNodeList().size());
 		
 		if (aiWorld.getNodeList().containsKey(nextNode))
 		{
-			//return nextNode;
-			return 177;
+			return nextNode;
+			
 		}
 		else
 			return -1;
 	}
 	
 	
-	public int getTransition(AIWorld aiWorld, PredictedPath predPath)
+	public int getTransition(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
+		PredictedPath predPath = aiPlayer.getCurrentPath();
+		
 		if (predPath == null)
 		{
-			return this.obtainNextTarget(aiWorld);
+			return this.obtainNextPathNode(aiWorld);
 		}
 		else
 		{
 			if (predPath.getPredConn().isEmpty())
 			{
-				return this.obtainNextTarget(aiWorld);
+				return this.obtainNextPathNode(aiWorld);
 			}
 		}
 		
