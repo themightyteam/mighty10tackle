@@ -11,16 +11,7 @@ public class WholeGameAssets extends AbstractAssets {
 
 	static Texture allThingsSheet;
 	
-//	public static final int DOING_NOTHING = 0;
-//	public static final int PLAYER_IDLE_LEFT = 1;
-//	public static final int PLAYER_IDLE_RIGHT = 2;
-//	public static final int PLAYER_RUNNING_LEFT = 3;
-//	public static final int PLAYER_RUNNING_RIGHT = 4;
-//	public static final int PLAYER_JUMPING_LEFT = 5;
-//	public static final int PLAYER_JUMPING_RIGHT = 6;
-//	public static final int PLAYER_IN_STAIR = 7;
-//	public static final int PLAYER_DEATH = 8;
-//	public static final int PLAYER_CHARRED = 9;
+	public static final int DOING_NOTHING = 0;
 	
 	public static final int PLAYER_GREEN_DOING_NOTHING = 1000;
 	public static final int PLAYER_GREEN_IDLE_LEFT = 1001;
