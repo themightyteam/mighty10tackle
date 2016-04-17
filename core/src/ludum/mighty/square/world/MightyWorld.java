@@ -686,6 +686,7 @@ public class MightyWorld {
 		for (Body b : this.getPlayerBodysList()) {
 			Player p = (Player) b.getUserData();
 			if (p.getPlayerState() == Player.STATE_DEAD) {
+				p.setPlayerState(Player.STATE_PLAYING);
 				// Respawns at a random respawn point of it's team
 				if (p.getSquareTeam() == Player.GREEN_TEAM) {
 					if (p.hasFlag() == true) {
@@ -937,6 +938,22 @@ public class MightyWorld {
 		world.getBodies(bodies);
 		for (Body body : bodies) {
 			if (body.getUserData() instanceof Player) {
+				list.add(body);
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 
+	 * @return List of bodies of all bullets in the world.
+	 */
+	public ArrayList<Body> getBulletBodysList() {
+		ArrayList<Body> list = new ArrayList<Body>();
+		Array<Body> bodies = new Array<Body>();
+		world.getBodies(bodies);
+		for (Body body : bodies) {
+			if (body.getUserData() instanceof Bullet) {
 				list.add(body);
 			}
 		}
