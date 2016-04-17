@@ -415,6 +415,7 @@ public class MightyWorld {
 	{
 		this.world.step(1f / 60f, 6, 2);
 		updateBullets();
+		updatePlayers();
 	}
 
 	/** removes collisioned bullets **/
@@ -426,6 +427,27 @@ public class MightyWorld {
 				this.world.destroyBody(b.getMyBody());
 				bulletIterator.remove();
 				b = null;
+			}
+		}
+	}
+
+	/** killed players management **/
+	void updatePlayers() {
+		for (Body b : this.getPlayerBodysList()) {
+			Player p = (Player) b.getUserData();
+			if (p.getPlayerState() == Player.STATE_DEAD) {
+				// Respawns at a random respawn point of it's team
+				if (p.getSquareTeam() == Player.GREEN_TEAM) {
+					int x = this.greenRespawnPointList.get(0).getX();
+					int y = this.greenRespawnPointList.get(0).getY();
+					b.setTransform(x, y, 0);
+					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
+				} else {
+					int x = this.violetRespawnPointList.get(0).getX();
+					int y = this.violetRespawnPointList.get(0).getY();
+					b.setTransform(x, y, 0);
+					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
+				}
 			}
 		}
 	}
