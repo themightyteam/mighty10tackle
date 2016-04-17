@@ -684,11 +684,23 @@ public class MightyWorld {
 			if (p.getPlayerState() == Player.STATE_DEAD) {
 				// Respawns at a random respawn point of it's team
 				if (p.getSquareTeam() == Player.GREEN_TEAM) {
+					if (p.hasFlag() == true) {
+						// restores the flag
+						p.setHasFlag(false);
+						p.setHasScored(false);
+						this.violetFlagsList.get(0).setTaken(false);
+					}
 					int x = this.greenRespawnPointList.get(0).getX();
 					int y = this.greenRespawnPointList.get(0).getY();
 					b.setTransform(x, y, 0);
 					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 				} else {
+					if (p.hasFlag() == true) {
+						// restores the flag
+						p.setHasFlag(false);
+						p.setHasScored(false);
+						this.greenFlagsList.get(0).setTaken(false);
+					}
 					int x = this.violetRespawnPointList.get(0).getX();
 					int y = this.violetRespawnPointList.get(0).getY();
 					b.setTransform(x, y, 0);
