@@ -3,6 +3,7 @@ package ludum.mighty.square.player;
 import java.util.ArrayList;
 
 import ludum.mighty.square.noPlayer.Bullet;
+import ludum.mighty.square.world.MightyWorld;
 import ai.decision.AlienDecisor;
 import ai.movement.steering.BasicSteering;
 import ai.pathfinding.AStar;
@@ -41,9 +42,11 @@ public class AINormalPlayer extends NormalPlayer
 
 	public AINormalPlayer(int type, int squareTeam, Vector2 initPosition,
 			AIWorld aiWorld, ArrayList<Player> myTeamList,
-			ArrayList<Player> enemyList) 
+			ArrayList<Player> enemyList, 
+			MightyWorld world
+			) 
 	{
-		super(type, squareTeam, initPosition, aiWorld, myTeamList, enemyList);
+		super(type, squareTeam, initPosition, aiWorld, myTeamList, enemyList, world);
 
 		//TODO Init AI here
 		
@@ -61,7 +64,31 @@ public class AINormalPlayer extends NormalPlayer
 
 		this.deleteNodesFromTarget();
 
+		if (this.squareTeam ==  Player.GREEN_TEAM)
+		{
+			this.decisor.setMyBase(new Vector2(
+			world.getGreenBasesList().get(0).getX(), 
+			world.getGreenBasesList().get(0).getY()));
+			
+			this.decisor.setOtherBase(new Vector2(
+					world.getVioletBasesList().get(0).getX(), 
+					world.getVioletBasesList().get(0).getY()));
+					
+		}
+		else
+		{
 
+			this.decisor.setMyBase(new Vector2(
+					world.getVioletBasesList().get(0).getX(), 
+					world.getVioletBasesList().get(0).getY()));
+			
+			
+			this.decisor.setOtherBase(new Vector2(
+			world.getGreenBasesList().get(0).getX(), 
+			world.getGreenBasesList().get(0).getY()));
+			
+
+		}
 	}
 
 
@@ -241,6 +268,10 @@ public class AINormalPlayer extends NormalPlayer
 				rightKeyPressed = false;
 			}
 
+			//Check if should I shoot
+			fireKeyPressed = this.decisor.shouldIshoot(this);
+			
+			
 			super.updatePlayerPosition(playerBody,
 					timeEpoch,
 					upKeyPressed, 

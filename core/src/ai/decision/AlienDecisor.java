@@ -24,6 +24,10 @@ public class AlienDecisor extends BasicDecisor
 	//Both teams have the flag
 	public static int TOTAL_MAYHEM = 3;
 
+	
+	public static final double SHOOTING_RANGE = 5;
+	
+	
 	int currentState;
 
 
@@ -187,6 +191,8 @@ public class AlienDecisor extends BasicDecisor
 	{
 		if (this.myBase != null)
 		{
+			System.out.println("My Base "+ this.myBase.x+ " "+ this.myBase.y );
+			
 			int baseNode = aiWorld.obtainCurrentNode(this.myBase).getIdNode();
 
 			return baseNode;
@@ -439,6 +445,46 @@ public class AlienDecisor extends BasicDecisor
 	private double euclideanDistance(Vector2 one, Vector2 other)
 	{
 		return 0.5 * Math.pow(one.x - other.x, 2 ) + Math.pow(other.y - other.y, 2);
+	}
+
+	
+	public boolean shouldIshoot(AINormalPlayer aiPlayer)
+	{
+		if ((this.closestEnemy != null) && (aiPlayer.getPosition() != null))
+		{
+			if (this.closestEnemy.getPosition() != null)
+			{
+				if (Math.abs(aiPlayer.getPosition().x - 
+						closestEnemy.getPosition().x) < AlienDecisor.SHOOTING_RANGE)
+				{
+					return true;
+				}
+			}
+			
+		}
+		
+		
+		return false;
+	}
+	
+
+	public Vector2 getMyBase() {
+		return myBase;
+	}
+
+
+	public void setMyBase(Vector2 myBase) {
+		this.myBase = myBase;
+	}
+
+
+	public Vector2 getOtherBase() {
+		return otherBase;
+	}
+
+
+	public void setOtherBase(Vector2 otherBase) {
+		this.otherBase = otherBase;
 	}
 
 

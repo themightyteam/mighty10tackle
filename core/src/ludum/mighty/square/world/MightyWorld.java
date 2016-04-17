@@ -293,11 +293,11 @@ public class MightyWorld {
 		NormalPlayer tempPlayer = null;
 
 		if (isHuman == Player.IS_HUMAN) {
-			tempPlayer = new NormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList);
+			tempPlayer = new NormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
 			tempPlayer.setHumanControlled(true);
 			this.player = tempPlayer;
 		} else {
-			tempPlayer = new AINormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList);
+			tempPlayer = new AINormalPlayer(0, 0, new Vector2(x, y), this.aiWorld, this.greenTeamList, this.violetTeamList, this);
 			tempPlayer.setHumanControlled(false);
 		}
 
@@ -573,8 +573,8 @@ public class MightyWorld {
 
 			if (team.equalsIgnoreCase("green")) {
 				GreenBase gB = (GreenBase) EnemyFactory.buildEnemy("GREENBASE 5000 -1 1000;0 1000 17 38 17 38 1 55");
-				gB.setX(x);
-				gB.setY(y);
+				gB.setX(x + width * 0.5f);
+				gB.setY(y + height * 0.5f);
 				this.greenBasesList.add(gB);
 				// create Box2D objects related to the body:
 				// First we create a body definition
@@ -615,8 +615,8 @@ public class MightyWorld {
 
 			} else if (team.equalsIgnoreCase("violet")) {
 				VioletBase vB = (VioletBase) EnemyFactory.buildEnemy("VIOLETBASE 5000 -1 1000;0 1000 17 38 17 38 1 55");
-				vB.setX(x);
-				vB.setY(y);
+				vB.setX(x + width * 0.5f);
+				vB.setY(y + height * 0.5f);
 				this.violetBasesList.add(vB);
 				// create Box2D objects related to the body:
 				// First we create a body definition
@@ -1013,4 +1013,22 @@ public class MightyWorld {
 		return this.enemyList;
 	}
 
+	public ArrayList<GreenBase> getGreenBasesList() {
+		return greenBasesList;
+	}
+
+	public void setGreenBasesList(ArrayList<GreenBase> greenBasesList) {
+		this.greenBasesList = greenBasesList;
+	}
+
+	public ArrayList<VioletBase> getVioletBasesList() {
+		return violetBasesList;
+	}
+
+	public void setVioletBasesList(ArrayList<VioletBase> violetBasesList) {
+		this.violetBasesList = violetBasesList;
+	}
+
+	
+	
 }
