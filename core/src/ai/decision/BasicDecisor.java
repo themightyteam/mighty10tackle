@@ -14,7 +14,6 @@ public class BasicDecisor
 	
 
 	//Returns a random target if none available
-	
 	public int obtainNextPathNode(AIWorld aiWorld)
 	{
 		int nextNode = (int) Math.floor(Math.random() * aiWorld.getNodeList().size());

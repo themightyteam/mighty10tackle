@@ -2,10 +2,8 @@ package ludum.mighty.square.player;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-
-import ai.decision.BasicDecisor;
+import ludum.mighty.square.noPlayer.Bullet;
+import ai.decision.AlienDecisor;
 import ai.movement.steering.BasicSteering;
 import ai.pathfinding.AStar;
 import ai.pathfinding.commons.Connection2D;
@@ -14,14 +12,15 @@ import ai.pathfinding.commons.PredictedPath;
 import ai.pathfinding.heu.EstimatedCostHeuristic;
 import ai.pathfinding.heu.EuclideanDistanceHeuristic;
 import ai.world.AIWorld;
-import ludum.mighty.square.noPlayer.Bullet;
+
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public class AINormalPlayer extends NormalPlayer 
 {
-	
-	BasicDecisor decisor = new BasicDecisor();
-	BasicSteering steering = new BasicSteering();
 
+	AlienDecisor decisor = new AlienDecisor();
+	BasicSteering steering = new BasicSteering();
 
 	AStar pathFinder;
 	PredictedPath currentPath;
@@ -55,8 +54,8 @@ public class AINormalPlayer extends NormalPlayer
 		this.obtainPath();
 
 		this.deleteNodesFromTarget();
-		
-	
+
+
 	}
 
 
@@ -122,97 +121,112 @@ public class AINormalPlayer extends NormalPlayer
 
 
 
-}
+	}
 
-@Override
-public void setPosition(Vector2 position) 
-{
-	super.setPosition(position);
+	@Override
+	public void setPosition(Vector2 position) 
+	{
+		super.setPosition(position);
 
 
-	this.obtainPath();
+		this.obtainPath();
 
-	this.deleteNodesFromTarget();
+		this.deleteNodesFromTarget();
+
+		/*//Uncomment for debug
 	if (this.currentPath != null)
 		if (!this.currentPath.getPredConn().isEmpty())
 			System.out.println("Next Node In Path "+ this.currentPath.getPredConn()
 					.get(0).getSinkNodeId() + " CURR "+ this.lastSeenNode.getIdNode());
-}
 
-@Override
-public void updatePlayerPosition(Body playerBody, long timeEpoch, boolean upKeyPressed, boolean downKeyPressed,
-		boolean leftKeyPressed, boolean rightKeyPressed, boolean fireKeyPressed, ArrayList<Bullet> bulletsList) {
+		 */
+	}
 
-	// H FIX Set the current position
-	// Update position
-	Vector2 newPos = playerBody.getPosition();
-	this.setPosition(new Vector2(newPos.x, newPos.y));
+	@Override
+	public void updatePlayerPosition(Body playerBody, long timeEpoch, boolean upKeyPressed, boolean downKeyPressed,
+			boolean leftKeyPressed, boolean rightKeyPressed, boolean fireKeyPressed, ArrayList<Bullet> bulletsList) {
+
+		// H FIX Set the current position
+		// Update position
+		Vector2 newPos = playerBody.getPosition();
+		this.setPosition(new Vector2(newPos.x, newPos.y));
 
 
-	//Picking the node 
-	if (this.currentTarget != null)
-	{
-		Vector2 newSteering = this.steering.updateSteering(this.getPosition(), this.currentTarget, this.impulse);
-
-		if ( newSteering.x < 0 )
+		//Picking the node 
+		if (this.currentTarget != null)
 		{
-			leftKeyPressed = true;
-		}
-		else if (newSteering.x > 0)
-			rightKeyPressed = true;
+			Vector2 newSteering = this.steering.updateSteering(this.getPosition(), this.currentTarget, this.impulse);
+
+			if ( newSteering.x < 0 )
+			{
+				leftKeyPressed = true;
+			}
+			else if (newSteering.x > 0)
+				rightKeyPressed = true;
 
 
 
-		if ( ( newSteering.y < 0) && this.targetIsJump ) 
-		{
-			upKeyPressed = true;
-		}
-		else if ( newSteering.y <= 0)
-		{
-
-
-			upKeyPressed = false;
-
-			if ((Math.abs(this.currentTarget.x - this.position.x)) >
-			(Math.abs(this.currentTarget.y - this.position.y)))
+			if ( ( newSteering.y < 0) && this.targetIsJump ) 
 			{
 				upKeyPressed = true;
 			}
-			else
-				downKeyPressed = true;
-		}
-
-		if (newSteering.y > 0)
-		{
-			upKeyPressed = true;
-		}
-
-
-		//Check if we must block the y key
-		if (this.jumpingSinceEpoch != 0)
-			if ((timeEpoch - this.jumpingSinceEpoch > 300))
+			else if ( newSteering.y <= 0)
 			{
+
+
 				upKeyPressed = false;
+
+				if ((Math.abs(this.currentTarget.x - this.position.x)) >
+				(Math.abs(this.currentTarget.y - this.position.y)))
+				{
+					upKeyPressed = true;
+				}
+				else
+					downKeyPressed = true;
 			}
 
-		if (Math.abs(newSteering.x/newSteering.y) < AINormalPlayer.CLOSE_BUT_HIGH)
-		{
-			//Cancel the x
-			leftKeyPressed = false;
-			rightKeyPressed = false;
-		}
+			if (newSteering.y > 0)
+			{
+				upKeyPressed = true;
+			}
 
-		super.updatePlayerPosition(playerBody,
-				timeEpoch,
-				upKeyPressed, 
-				downKeyPressed,
-				leftKeyPressed, 
-				rightKeyPressed,
-				fireKeyPressed, 
-				bulletsList
-				);
+
+			//Check if we must block the y key
+			if (this.jumpingSinceEpoch != 0)
+				if ((timeEpoch - this.jumpingSinceEpoch > 300))
+				{
+					upKeyPressed = false;
+				}
+
+			if (Math.abs(newSteering.x/newSteering.y) < AINormalPlayer.CLOSE_BUT_HIGH)
+			{
+				//Cancel the x
+				leftKeyPressed = false;
+				rightKeyPressed = false;
+			}
+
+			super.updatePlayerPosition(playerBody,
+					timeEpoch,
+					upKeyPressed, 
+					downKeyPressed,
+					leftKeyPressed, 
+					rightKeyPressed,
+					fireKeyPressed, 
+					bulletsList
+					);
+		}
 	}
-}
+
+
+	public PredictedPath getCurrentPath() {
+		return currentPath;
+	}
+
+
+	public void setCurrentPath(PredictedPath currentPath) {
+		this.currentPath = currentPath;
+	}
+
 
 
 

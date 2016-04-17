@@ -259,4 +259,48 @@ public class NormalPlayer extends Player
 		bulletsList.add(bullet);
 	}
 
+	
+	//Getters and setters
+	public boolean isHasFlag() {
+		return hasFlag;
+	}
+
+	public void setHasFlag(boolean hasFlag) {
+		this.hasFlag = hasFlag;
+	}
+
+	public int getSquareTeam() {
+		return squareTeam;
+	}
+
+	public void setSquareTeam(int squareTeam) {
+		this.squareTeam = squareTeam;
+	}
+
+	public ArrayList<Player> getGreenTeamList() {
+		return greenTeamList;
+	}
+
+	public void setGreenTeamList(ArrayList<Player> greenTeamList) {
+		this.greenTeamList = greenTeamList;
+	}
+
+	public ArrayList<Player> getVioletTeamList() {
+		return violetTeamList;
+	}
+
+	public void setVioletTeamList(ArrayList<Player> violetTeamList) {
+		this.violetTeamList = violetTeamList;
+	}
+
+	public PathNode getLastSeenNode() {
+		return lastSeenNode;
+	}
+
+	public void setLastSeenNode(PathNode lastSeenNode) {
+		this.lastSeenNode = lastSeenNode;
+	}
+
+	
+	
 }

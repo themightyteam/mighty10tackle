@@ -127,6 +127,23 @@ public class AIWorld
 		
 	}
 	
+	public int obtainCurrentZone(Vector2 currentPos)
+	{
+		int currentZone = -1;
+		
+		for (PathNode zoneNode : this.zoneList)
+		{
+			if ( zoneNode.getNodeShape().contains(currentPos) )
+			{
+				currentZone = zoneNode.getIdNode();
+				break;
+			}
+		}
+		
+		return currentZone;
+		
+	}
+	
 	public PathNode obtainCurrentNode(Vector2 currentPos)
 	{
 		
@@ -282,6 +299,24 @@ public class AIWorld
 	public void setGraphMap(HashMap<Integer, List<Connection>> graphMap) {
 		this.graphMap = graphMap;
 	}
+
+	public HashMap<Integer, List<PathNode>> getZonePathMap() {
+		return zonePathMap;
+	}
+
+	public void setZonePathMap(HashMap<Integer, List<PathNode>> zonePathMap) {
+		this.zonePathMap = zonePathMap;
+	}
+
+	public List<PathNode> getPathList() {
+		return pathList;
+	}
+
+	public void setPathList(List<PathNode> pathList) {
+		this.pathList = pathList;
+	}
+	
+	
 	
 	
 	
