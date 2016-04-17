@@ -308,6 +308,16 @@ public class MightyRender
 		}
 	}
 
+	public void renderBullets() {
+		this.renderer.getBatch().begin();
+		for (Body body : this.gameWorld.getBulletBodysList()) {
+			TextureRegion region = this.gameAssets.getAnimation(WholeGameAssets.PLAYER_BULLET, 0);
+			this.renderer.getBatch().draw(region, body.getWorldCenter().x - 0.5f, body.getWorldCenter().y - 0.5f,
+					region.getRegionWidth() / 16f, region.getRegionHeight() / 16f);
+		}
+		this.renderer.getBatch().end();
+	}
+
 	public void renderEnemies()
 	{
 		this.renderer.getBatch().begin();
@@ -337,8 +347,9 @@ public class MightyRender
 	{
 
 		this.renderer.render();
-		this.renderEnemies();
+		//this.renderEnemies();
 		this.renderPlayer();
+		this.renderBullets();
 		this.box2DRenderer.render(this.gameWorld.getWorld(), this.guiCam.combined);
 	}
 

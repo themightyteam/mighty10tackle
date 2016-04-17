@@ -942,6 +942,22 @@ public class MightyWorld {
 		}
 		return list;
 	}
+
+	/**
+	 * 
+	 * @return List of bodies of all bullets in the world.
+	 */
+	public ArrayList<Body> getBulletBodysList() {
+		ArrayList<Body> list = new ArrayList<Body>();
+		Array<Body> bodies = new Array<Body>();
+		world.getBodies(bodies);
+		for (Body body : bodies) {
+			if (body.getUserData() instanceof Bullet) {
+				list.add(body);
+			}
+		}
+		return list;
+	}
 	/**
 	 * 
 	 * @return
