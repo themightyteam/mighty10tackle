@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 import ludum.mighty.square.assets.WholeGameAssets;
 import ludum.mighty.square.noPlayer.NoPlayer;
@@ -16,7 +15,7 @@ import ludum.mighty.square.world.MightyWorld;
 public class MightyRender 
 {
 
-	private Box2DDebugRenderer box2DRenderer;
+	// private Box2DDebugRenderer box2DRenderer;
 	private OrthogonalTiledMapRenderer renderer;
 	OrthographicCamera guiCam;
 	WholeGameAssets gameAssets;
@@ -33,7 +32,7 @@ public class MightyRender
 		this.map = map;
 		this.gameWorld = gameWorld;
 
-		this.box2DRenderer = new Box2DDebugRenderer();	
+		// this.box2DRenderer = new Box2DDebugRenderer();
 
 		this.renderer = new OrthogonalTiledMapRenderer(map, 1 /16f);
 
@@ -350,7 +349,8 @@ public class MightyRender
 		//this.renderEnemies();
 		this.renderPlayer();
 		this.renderBullets();
-		this.box2DRenderer.render(this.gameWorld.getWorld(), this.guiCam.combined);
+		// this.box2DRenderer.render(this.gameWorld.getWorld(),
+		// this.guiCam.combined);
 	}
 
 
