@@ -933,6 +933,7 @@ public class MightyWorld {
 	public int getPlayerStatus() {
 		return ((Player) this.getPlayer().getUserData()).getPlayerState();
 	}
+
 	/**
 	 * 
 	 * @return
