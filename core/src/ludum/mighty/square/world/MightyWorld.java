@@ -22,8 +22,12 @@ import ai.world.AIWorld;
 import ludum.mighty.square.collisions.CollisionsListener;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.noPlayer.EnemyFactory;
+import ludum.mighty.square.noPlayer.GreenBase;
+import ludum.mighty.square.noPlayer.GreenFlag;
 import ludum.mighty.square.noPlayer.GreenRespawnPoint;
 import ludum.mighty.square.noPlayer.NoPlayer;
+import ludum.mighty.square.noPlayer.VioletBase;
+import ludum.mighty.square.noPlayer.VioletFlag;
 import ludum.mighty.square.noPlayer.VioletRespawnPoint;
 import ludum.mighty.square.player.AINormalPlayer;
 import ludum.mighty.square.player.NormalPlayer;
@@ -63,6 +67,21 @@ public class MightyWorld {
 	private ArrayList<GreenRespawnPoint> greenRespawnPointList;
 	/** list of violet team respawn points **/
 	private ArrayList<VioletRespawnPoint> violetRespawnPointList;
+
+	/** list of green flags (only one in this version) **/
+	private ArrayList<GreenFlag> greenFlagsList;
+	/** list of violet flags (only one in this version) **/
+	private ArrayList<VioletFlag> violetFlagsList;
+
+	/** list of green bases (only one in this version) **/
+	private ArrayList<GreenBase> greenBasesList;
+	/** list of violet bases (only one in this version) **/
+	private ArrayList<VioletBase> violetBasesList;
+
+	/** **/
+	private int greenScore;
+	/** **/
+	private int violetScore;
 
 	/** Real time of beginning of the game in milliseconds. */
 	long startEpoch;
@@ -133,6 +152,8 @@ public class MightyWorld {
 	public void init(TiledMap map, int level, Array<Array<RecordedStep>> allRecordedSteps, long timeToFinish,
 			AIWorld aiWorld) {
 		this.curentLevel = level;
+		this.greenScore = 0;
+		this.violetScore = 0;
 
 		MapProperties prop = map.getProperties();
 
@@ -221,7 +242,8 @@ public class MightyWorld {
 		// }
 
 		generateRespawnPointsLists(map.getLayers().get("respawn"));
-
+		generateFlagsLists(map.getLayers().get("flags"));
+		generateBasesLists(map.getLayers().get("bases"));
 		generatePlayerTeamLists();
 
 		/**
@@ -409,6 +431,230 @@ public class MightyWorld {
 	}
 
 	/**
+	 * 
+	 * @param layer
+	 *            Tiled MapLayer object where the flag objects are defined.
+	 */
+	private void generateFlagsLists(MapLayer layer) {
+		if (this.greenFlagsList == null) {
+			this.greenFlagsList = new ArrayList<GreenFlag>();
+		} else {
+			this.greenFlagsList.clear();
+		}
+
+		if (this.violetFlagsList == null) {
+			this.violetFlagsList = new ArrayList<VioletFlag>();
+		} else {
+			this.violetFlagsList.clear();
+		}
+
+		for (MapObject object : layer.getObjects()) {
+			String id = Integer.toString(Integer.parseInt(object.getProperties().get("id", String.class)) + 1000);
+			String team = object.getProperties().get("team", String.class);
+
+			int x = object.getProperties().get("x", Float.class).intValue() / 16;
+			int y = object.getProperties().get("y", Float.class).intValue() / 16;
+
+			// we don't need these (typed just for completeness)
+			// float width = object.getProperties().get("width", Float.class);
+			// float height = object.getProperties().get("height", Float.class);
+
+			if (team.equalsIgnoreCase("green")) {
+				GreenFlag gF = (GreenFlag) EnemyFactory.buildEnemy("GREENFLAG 5000 -1 1000;0 1000 17 38 17 38 1 55");
+				gF.setX(x);
+				gF.setY(y);
+				this.greenFlagsList.add(gF);
+				// create Box2D objects related to the body:
+				// First we create a body definition
+				BodyDef bodyDef = new BodyDef();
+				// We set our body to dynamic, for something like ground which
+				// doesn't move we would set it to StaticBody
+				bodyDef.type = BodyType.StaticBody;
+				// Set our body's starting position in the world
+				bodyDef.position.set(x + 0.5f, y + 0.5f);
+
+				// Create our body in the world using our body definition
+				Body body = this.world.createBody(bodyDef);
+
+				// Create a rectangle shape
+				PolygonShape box = new PolygonShape();
+				box.setAsBox(0.5f, 0.5f); // 1 = 16 pixels = 1 tile width
+
+				// Create a fixture definition to apply our shape to
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.shape = box;
+				fixtureDef.density = 20f;
+				fixtureDef.friction = 0f;
+				fixtureDef.restitution = 0f;
+				fixtureDef.isSensor = true;
+
+				// Create our fixture and attach it to the body
+				Fixture fixture = body.createFixture(fixtureDef);
+
+				// Put player object as user data
+
+				body.setUserData(gF);
+
+				// Remember to dispose of any shapes after you're done with
+				// them!
+				// BodyDef and FixtureDef don't need disposing, but shapes do.
+				box.dispose();
+
+			} else if (team.equalsIgnoreCase("violet")) {
+				VioletFlag vF = (VioletFlag) EnemyFactory.buildEnemy("VIOLETFLAG 5000 -1 1000;0 1000 17 38 17 38 1 55");
+				vF.setX(x);
+				vF.setY(y);
+				this.violetFlagsList.add(vF);
+				// create Box2D objects related to the body:
+				// First we create a body definition
+				BodyDef bodyDef = new BodyDef();
+				// We set our body to dynamic, for something like ground which
+				// doesn't move we would set it to StaticBody
+				bodyDef.type = BodyType.StaticBody;
+				// Set our body's starting position in the world
+				bodyDef.position.set(x + 0.5f, y + 0.5f);
+
+				// Create our body in the world using our body definition
+				Body body = this.world.createBody(bodyDef);
+
+				// Create a rectangle shape
+				PolygonShape box = new PolygonShape();
+				box.setAsBox(0.5f, 0.5f); // 1 = 16 pixels = 1 tile width
+
+				// Create a fixture definition to apply our shape to
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.shape = box;
+				fixtureDef.density = 20f;
+				fixtureDef.friction = 0f;
+				fixtureDef.restitution = 0f;
+				fixtureDef.isSensor = true;
+
+				// Create our fixture and attach it to the body
+				Fixture fixture = body.createFixture(fixtureDef);
+
+				// Put player object as user data
+
+				body.setUserData(vF);
+
+				// Remember to dispose of any shapes after you're done with
+				// them!
+				// BodyDef and FixtureDef don't need disposing, but shapes do.
+				box.dispose();
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param layer
+	 *            Tiled MapLayer object where the base objects are defined.
+	 */
+	private void generateBasesLists(MapLayer layer) {
+		if (this.greenBasesList == null) {
+			this.greenBasesList = new ArrayList<GreenBase>();
+		} else {
+			this.greenBasesList.clear();
+		}
+
+		if (this.violetBasesList == null) {
+			this.violetBasesList = new ArrayList<VioletBase>();
+		} else {
+			this.violetBasesList.clear();
+		}
+
+		for (MapObject object : layer.getObjects()) {
+			String id = Integer.toString(Integer.parseInt(object.getProperties().get("id", String.class)) + 1000);
+			String team = object.getProperties().get("team", String.class);
+
+			int x = object.getProperties().get("x", Float.class).intValue() / 16;
+			int y = object.getProperties().get("y", Float.class).intValue() / 16;
+			float width = object.getProperties().get("width", Float.class) / 16;
+			float height = object.getProperties().get("height", Float.class) / 16;
+
+			if (team.equalsIgnoreCase("green")) {
+				GreenBase gB = (GreenBase) EnemyFactory.buildEnemy("GREENBASE 5000 -1 1000;0 1000 17 38 17 38 1 55");
+				this.greenBasesList.add(gB);
+				// create Box2D objects related to the body:
+				// First we create a body definition
+				BodyDef bodyDef = new BodyDef();
+				// We set our body to dynamic, for something like ground which
+				// doesn't move we would set it to StaticBody
+				bodyDef.type = BodyType.StaticBody;
+				// Set our body's starting position in the world
+				bodyDef.position.set(x + width * 0.5f, y + height * 0.5f);
+
+				// Create our body in the world using our body definition
+				Body body = this.world.createBody(bodyDef);
+
+				// Create a rectangle shape
+				PolygonShape box = new PolygonShape();
+				box.setAsBox(width * 0.5f, height * 0.5f); // 1 = 16 pixels = 1
+															// tile width
+
+				// Create a fixture definition to apply our shape to
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.shape = box;
+				fixtureDef.density = 20f;
+				fixtureDef.friction = 0f;
+				fixtureDef.restitution = 0f;
+				fixtureDef.isSensor = true;
+
+				// Create our fixture and attach it to the body
+				Fixture fixture = body.createFixture(fixtureDef);
+
+				// Put player object as user data
+
+				body.setUserData(gB);
+
+				// Remember to dispose of any shapes after you're done with
+				// them! BodyDef and FixtureDef don't need disposing, but shapes
+				// do.
+				box.dispose();
+
+			} else if (team.equalsIgnoreCase("violet")) {
+				VioletBase vB = (VioletBase) EnemyFactory.buildEnemy("VIOLETBASE 5000 -1 1000;0 1000 17 38 17 38 1 55");
+				this.violetBasesList.add(vB);
+				// create Box2D objects related to the body:
+				// First we create a body definition
+				BodyDef bodyDef = new BodyDef();
+				// We set our body to dynamic, for something like ground which
+				// doesn't move we would set it to StaticBody
+				bodyDef.type = BodyType.StaticBody;
+				// Set our body's starting position in the world
+				bodyDef.position.set(x + width * 0.5f, y + height * 0.5f);
+
+				// Create our body in the world using our body definition
+				Body body = this.world.createBody(bodyDef);
+
+				// Create a rectangle shape
+				PolygonShape box = new PolygonShape();
+				box.setAsBox(width * 0.5f, height * 0.5f); // 1 = 16 pixels = 1
+															// tile width
+
+				// Create a fixture definition to apply our shape to
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.shape = box;
+				fixtureDef.density = 20f;
+				fixtureDef.friction = 0f;
+				fixtureDef.restitution = 0f;
+				fixtureDef.isSensor = true;
+
+				// Create our fixture and attach it to the body
+				Fixture fixture = body.createFixture(fixtureDef);
+
+				// Put player object as user data
+
+				body.setUserData(vB);
+
+				// Remember to dispose of any shapes after you're done with
+				// them!
+				// BodyDef and FixtureDef don't need disposing, but shapes do.
+				box.dispose();
+			}
+		}
+	}
+
+	/**
 	 * @brief Updates Box2D engine's time.
 	 */
 	public void stepBox2D()
@@ -431,7 +677,7 @@ public class MightyWorld {
 		}
 	}
 
-	/** killed players management **/
+	/** killed players and player scores management **/
 	void updatePlayers() {
 		for (Body b : this.getPlayerBodysList()) {
 			Player p = (Player) b.getUserData();
@@ -447,6 +693,25 @@ public class MightyWorld {
 					int y = this.violetRespawnPointList.get(0).getY();
 					b.setTransform(x, y, 0);
 					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
+				}
+			}
+			if (p.hasScored() == true) {
+				if (p.getSquareTeam() == Player.GREEN_TEAM) {
+					p.setHasFlag(false);
+					p.setHasScored(false);
+					this.violetFlagsList.get(0).setTaken(false);
+					this.greenScore += 1;
+					// System.out.println(
+					// "Green team scores!! GreenTeam " + this.greenScore + " -
+					// Violet Team " + this.violetScore);
+				} else if (p.getSquareTeam() == Player.VIOLET_TEAM) {
+					p.setHasFlag(false);
+					p.setHasScored(false);
+					this.greenFlagsList.get(0).setTaken(false);
+					this.violetScore += 1;
+					// System.out.println(
+					// "Violet team scores!! GreenTeam " + this.greenScore + " -
+					// Violet Team " + this.violetScore);
 				}
 			}
 		}

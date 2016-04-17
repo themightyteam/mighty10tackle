@@ -70,6 +70,25 @@ public class Player {
 	/** True if the player has the flag. **/
 	boolean hasFlag;
 
+	public boolean hasFlag() {
+		return hasFlag;
+	}
+
+	public void setHasFlag(boolean hasFlag) {
+		this.hasFlag = hasFlag;
+	}
+
+	/** True if the player has just entered the base with the flag. **/
+	boolean hasScored;
+
+	public boolean hasScored() {
+		return hasScored;
+	}
+
+	public void setHasScored(boolean hasScored) {
+		this.hasScored = hasScored;
+	}
+
 	/** True if the player is invisible. **/
 	boolean invisible;
 

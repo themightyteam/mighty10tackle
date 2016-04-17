@@ -28,6 +28,10 @@ public abstract class NoPlayer {
 	public static final int TYPE_KEY = 16;
 	public static final int TYPE_RESPAWN_POINT = 17;
 	public static final int TYPE_BEER = 18;
+	public static final int TYPE_GREEN_FLAG = 19;
+	public static final int TYPE_VIOLET_FLAG = 20;
+	public static final int TYPE_GREEN_BASE = 21;
+	public static final int TYPE_VIOLET_BASE = 22;
 	
 	int noPlayerType;
 	

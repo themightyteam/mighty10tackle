@@ -9,11 +9,15 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import ludum.mighty.square.noPlayer.Beer;
 import ludum.mighty.square.noPlayer.BreakableBlock;
 import ludum.mighty.square.noPlayer.Bullet;
+import ludum.mighty.square.noPlayer.GreenBase;
 import ludum.mighty.square.noPlayer.GreenBlob;
+import ludum.mighty.square.noPlayer.GreenFlag;
 import ludum.mighty.square.noPlayer.GreenRespawnPoint;
 import ludum.mighty.square.noPlayer.Key;
 import ludum.mighty.square.noPlayer.Lever;
 import ludum.mighty.square.noPlayer.NoPlayer;
+import ludum.mighty.square.noPlayer.VioletBase;
+import ludum.mighty.square.noPlayer.VioletFlag;
 import ludum.mighty.square.player.Player;
 import ludum.mighty.square.settings.CommonSettings;
 
@@ -28,6 +32,11 @@ public class CollisionsListener implements ContactListener {
 	private final int COLLISION_TYPE_BULLET_NULL = 1; // bullet against wall
 	private final int COLLISION_TYPE_BULLET_BULLET = 2;
 	private final int COLLISION_TYPE_BULLET_PLAYER = 3;
+	private final int COLLISION_TYPE_GREENPLAYER_VIOLETFLAG = 4;
+	private final int COLLISION_TYPE_VIOLETPLAYER_GREENFLAG = 5;
+	private final int COLLISION_TYPE_GREENPLAYER_GREENBASE = 6;
+	private final int COLLISION_TYPE_VIOLETPLAYER_VIOLETBASE = 7;
+
 	@Override
 	public void beginContact(Contact contact) {
 		// System.out.println("collision!");
@@ -61,6 +70,70 @@ public class CollisionsListener implements ContactListener {
 				&& contact.getFixtureB().getBody().getUserData() instanceof Bullet) {
 			typeOfCollision = this.COLLISION_TYPE_BULLET_NULL;
 			body1 = contact.getFixtureB().getBody();
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof Player
+				&& contact.getFixtureB().getBody().getUserData() instanceof VioletFlag) {
+			body1 = contact.getFixtureA().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.GREEN_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_GREENPLAYER_VIOLETFLAG;
+				body2 = contact.getFixtureB().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof VioletFlag
+				&& contact.getFixtureB().getBody().getUserData() instanceof Player) {
+			body1 = contact.getFixtureB().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.GREEN_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_GREENPLAYER_VIOLETFLAG;
+				body2 = contact.getFixtureA().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof Player
+				&& contact.getFixtureB().getBody().getUserData() instanceof GreenFlag) {
+			body1 = contact.getFixtureA().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.VIOLET_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_VIOLETPLAYER_GREENFLAG;
+				body2 = contact.getFixtureB().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof GreenFlag
+				&& contact.getFixtureB().getBody().getUserData() instanceof Player) {
+			body1 = contact.getFixtureB().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.VIOLET_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_VIOLETPLAYER_GREENFLAG;
+				body2 = contact.getFixtureA().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof Player
+				&& contact.getFixtureB().getBody().getUserData() instanceof GreenBase) {
+			body1 = contact.getFixtureA().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.GREEN_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_GREENPLAYER_GREENBASE;
+				body2 = contact.getFixtureB().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof GreenBase
+				&& contact.getFixtureB().getBody().getUserData() instanceof Player) {
+			body1 = contact.getFixtureB().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.GREEN_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_GREENPLAYER_GREENBASE;
+				body2 = contact.getFixtureA().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof Player
+				&& contact.getFixtureB().getBody().getUserData() instanceof VioletBase) {
+			body1 = contact.getFixtureA().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.VIOLET_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_VIOLETPLAYER_VIOLETBASE;
+				body2 = contact.getFixtureB().getBody();
+			}
+		} else if (contact.getFixtureA().getBody().getUserData() instanceof VioletBase
+				&& contact.getFixtureB().getBody().getUserData() instanceof Player) {
+			body1 = contact.getFixtureB().getBody();
+			Player p = (Player) body1.getUserData();
+			if (p.getSquareTeam() == Player.VIOLET_TEAM) {
+				typeOfCollision = this.COLLISION_TYPE_VIOLETPLAYER_VIOLETBASE;
+				body2 = contact.getFixtureA().getBody();
+			}
 		}
 			
 		
@@ -72,6 +145,32 @@ public class CollisionsListener implements ContactListener {
 		} else if (typeOfCollision == this.COLLISION_TYPE_BULLET_PLAYER) {
 			((Bullet) body1.getUserData()).declareRemovable();
 			((Player) body2.getUserData()).setPlayerState(Player.STATE_DEAD);
+		} else if (typeOfCollision == this.COLLISION_TYPE_GREENPLAYER_VIOLETFLAG) {
+			Player p = (Player) body1.getUserData();
+			VioletFlag vF = (VioletFlag) body2.getUserData();
+			if (vF.isTaken() == false) {
+				p.setHasFlag(true);
+				vF.setTaken(true);
+				// System.out.print("VioletFlag conquered!");
+			}
+		} else if (typeOfCollision == this.COLLISION_TYPE_VIOLETPLAYER_GREENFLAG) {
+			Player p = (Player) body1.getUserData();
+			GreenFlag gF = (GreenFlag) body2.getUserData();
+			if (gF.isTaken() == false) {
+				p.setHasFlag(true);
+				gF.setTaken(true);
+				// System.out.print("GreenFlag conquered!");
+			}
+		} else if (typeOfCollision == this.COLLISION_TYPE_GREENPLAYER_GREENBASE) {
+			Player p = (Player) body1.getUserData();
+			if (p.hasFlag() == true) {
+				p.setHasScored(true);
+			}
+		} else if (typeOfCollision == this.COLLISION_TYPE_VIOLETPLAYER_VIOLETBASE) {
+			Player p = (Player) body1.getUserData();
+			if (p.hasFlag() == true) {
+				p.setHasScored(true);
+			}
 		}
 		
 		Player player = null;
