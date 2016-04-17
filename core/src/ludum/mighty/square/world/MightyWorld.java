@@ -686,6 +686,7 @@ public class MightyWorld {
 		for (Body b : this.getPlayerBodysList()) {
 			Player p = (Player) b.getUserData();
 			if (p.getPlayerState() == Player.STATE_DEAD) {
+				p.setPlayerState(Player.STATE_PLAYING);
 				// Respawns at a random respawn point of it's team
 				if (p.getSquareTeam() == Player.GREEN_TEAM) {
 					if (p.hasFlag() == true) {
