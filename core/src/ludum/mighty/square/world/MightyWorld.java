@@ -65,8 +65,12 @@ public class MightyWorld {
 
 	/** list of green team respawn points **/
 	private ArrayList<GreenRespawnPoint> greenRespawnPointList;
+	/** respawn point where the next green player respawns **/
+	int activeGreenRespawnPoint;
 	/** list of violet team respawn points **/
 	private ArrayList<VioletRespawnPoint> violetRespawnPointList;
+	/** respawn point where the next violet player respawns **/
+	int activeVioletRespawnPoint;
 
 	/** list of green flags (only one in this version) **/
 	private ArrayList<GreenFlag> greenFlagsList;
@@ -428,6 +432,8 @@ public class MightyWorld {
 				this.violetRespawnPointList.add(vRP);
 			}
 		}
+		this.activeGreenRespawnPoint = this.greenRespawnPointList.size() - 1;
+		this.activeVioletRespawnPoint = this.violetRespawnPointList.size() - 1;
 	}
 
 	/**
@@ -695,8 +701,12 @@ public class MightyWorld {
 						p.setHasScored(false);
 						this.violetFlagsList.get(0).setTaken(false);
 					}
-					int x = this.greenRespawnPointList.get(0).getX();
-					int y = this.greenRespawnPointList.get(0).getY();
+					int x = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getX();
+					int y = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getY();
+					this.activeGreenRespawnPoint -= 1;
+					if (this.activeGreenRespawnPoint < 0) {
+						this.activeGreenRespawnPoint = this.greenRespawnPointList.size() - 1;
+					}
 					b.setTransform(x, y, 0);
 					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 				} else {
@@ -706,8 +716,12 @@ public class MightyWorld {
 						p.setHasScored(false);
 						this.greenFlagsList.get(0).setTaken(false);
 					}
-					int x = this.violetRespawnPointList.get(0).getX();
-					int y = this.violetRespawnPointList.get(0).getY();
+					int x = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getX();
+					int y = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getY();
+					this.activeVioletRespawnPoint -= 1;
+					if (this.activeVioletRespawnPoint < 0) {
+						this.activeVioletRespawnPoint = this.violetRespawnPointList.size() - 1;
+					}
 					b.setTransform(x, y, 0);
 					p.updatePlayerPosition(b, this.timeEpoch, false, false, false, false, false, this.bulletsList);
 				}
