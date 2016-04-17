@@ -48,6 +48,12 @@ import com.badlogic.gdx.utils.TimeUtils;
  */
 public class MightyWorld {
 
+	//Score Catching the flag and returning to base
+	public static final int FIRST_DOWN = 1;
+	
+	//Score Catching the flag and returning to base
+	public static final int TOUCH_DOWN = 3;
+
 	private ArrayList<NoPlayer> enemyList; // only needed for backwards
 	// compatibility
 	/** list of all flying bullets **/
@@ -763,7 +769,7 @@ public class MightyWorld {
 					p.setHasFlag(false);
 					p.setHasScored(false);
 					this.violetFlagsList.get(0).setTaken(false);
-					this.greenScore += 1;
+					this.greenScore += TOUCH_DOWN;
 					// System.out.println(
 					// "Green team scores!! GreenTeam " + this.greenScore + " -
 					// Violet Team " + this.violetScore);
@@ -771,7 +777,7 @@ public class MightyWorld {
 					p.setHasFlag(false);
 					p.setHasScored(false);
 					this.greenFlagsList.get(0).setTaken(false);
-					this.violetScore += 1;
+					this.violetScore += TOUCH_DOWN;
 					// System.out.println(
 					// "Violet team scores!! GreenTeam " + this.greenScore + " -
 					// Violet Team " + this.violetScore);

@@ -15,6 +15,7 @@ import ludum.mighty.square.noPlayer.VioletFlag;
 import ludum.mighty.square.player.NormalPlayer;
 import ludum.mighty.square.player.Player;
 import ludum.mighty.square.settings.CommonSettings;
+import ludum.mighty.square.world.MightyWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -150,6 +151,12 @@ public class CollisionsListener implements ContactListener {
 			Player p = (Player) body1.getUserData();
 			VioletFlag vF = (VioletFlag) body2.getUserData();
 			if (vF.isTaken() == false) {
+				
+				((NormalPlayer) p).getWorld().setGreenScore(
+						((NormalPlayer) p).getWorld().getGreenScore() +
+						MightyWorld.FIRST_DOWN
+						);
+				
 				NormalPlayer normalPlayer = ((NormalPlayer) p);
 				normalPlayer.getWorld().getSound().playFlagCatch();
 
@@ -162,6 +169,11 @@ public class CollisionsListener implements ContactListener {
 			GreenFlag gF = (GreenFlag) body2.getUserData();
 			if (gF.isTaken() == false) {
 
+				((NormalPlayer) p).getWorld().setVioletScore(
+						((NormalPlayer) p).getWorld().getVioletScore() +
+						MightyWorld.FIRST_DOWN
+						);
+				
 				NormalPlayer normalPlayer = ((NormalPlayer) p);
 				normalPlayer.getWorld().getSound().playFlagCatch();
 
