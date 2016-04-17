@@ -38,11 +38,15 @@ public class NormalPlayer extends Player
 	Vector2 position;
 
 	PathNode lastSeenNode;
+	long timeStartNode = 0;
+	int lastNodeId = -1;
 
 	AIWorld aiWorld;
 	
 	ArrayList<Player> greenTeamList;
 	ArrayList<Player> violetTeamList;
+	
+	String name = "HUMAN";
 
 	public NormalPlayer() {
 	};
@@ -69,22 +73,24 @@ public class NormalPlayer extends Player
 
 		//Detect the square in which the player is located	
 		this.lastSeenNode = this.aiWorld.obtainCurrentNode(this.position);
-
-
-
+		
 		this.invisible = false;
 		this.hasFlag = false;
 
 		System.out.println("ONE SQUARE PLAYER");
 
-		this.printCurrentSquare();
+		//this.printCurrentSquare();
 	}
 
 	public void printCurrentSquare() {
+		if (this.name .equals("HUMAN"))
+		{
+		
 		if (this.lastSeenNode != null)
-			System.out.println("CURS " + this.lastSeenNode.getIdNode());
+			System.out.println(this.name + " CURS " + this.lastSeenNode.getIdNode());
 		else
-			System.out.println("CURS NULL");
+			System.out.println(this.name + " CURS NULL");
+		}
 	}
 
 	/**
@@ -114,9 +120,11 @@ public class NormalPlayer extends Player
 		if (newNode != null) {
 			// Updating the node
 			this.lastSeenNode = newNode;
-
-			this.printCurrentSquare();
+			
+			
 		}
+		
+		this.printCurrentSquare();
 	}
 
 	/**

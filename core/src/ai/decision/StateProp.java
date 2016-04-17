@@ -48,7 +48,7 @@ public class StateProp
 		}
 		else if (nextStateProp <= this.propGoToClosestEnemyWithFlag)
 		{
-			return StateProp.GOTOCLOSESTTEAMMATEWITHFLAG;
+			return StateProp.GOTOCLOSESTENEMYWITHFLAG;
 		}
 		else if (nextStateProp <= this.propGoToClosestTeammate)
 		{
@@ -56,7 +56,7 @@ public class StateProp
 		}
 		else 
 		{
-			return StateProp.GOTOCLOSESTENEMYWITHFLAG;
+			return StateProp.GOTOCLOSESTTEAMMATEWITHFLAG;
 		}
 		
 	}

@@ -15,9 +15,12 @@ import ai.world.AIWorld;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class AINormalPlayer extends NormalPlayer 
 {
+
+
 
 	AlienDecisor decisor = new AlienDecisor();
 	BasicSteering steering = new BasicSteering();
@@ -34,6 +37,7 @@ public class AINormalPlayer extends NormalPlayer
 
 	public static final double BIG_JUMP = 2;
 	public static final double CLOSE_BUT_HIGH = 0.02;
+	public static final long TIME_FOR_KICK = 3000;
 
 	public AINormalPlayer(int type, int squareTeam, Vector2 initPosition,
 			AIWorld aiWorld, ArrayList<Player> myTeamList,
@@ -42,6 +46,8 @@ public class AINormalPlayer extends NormalPlayer
 		super(type, squareTeam, initPosition, aiWorld, myTeamList, enemyList);
 
 		//TODO Init AI here
+		
+		this.name = "AI";
 
 		this.currentPath = null;
 
@@ -61,7 +67,7 @@ public class AINormalPlayer extends NormalPlayer
 
 	private void obtainPath()
 	{
-		int newTransition = this.decisor.getTransition(this.aiWorld, this.currentPath);
+		int newTransition = this.decisor.getTransition(this.aiWorld, this);
 
 		if ((newTransition != -1) && this.lastSeenNode != null )
 		{
@@ -123,12 +129,42 @@ public class AINormalPlayer extends NormalPlayer
 
 	}
 
+	public void checkForKick()
+	{
+		if (this.lastSeenNode != null)
+		{
+			if (this.lastNodeId == -1)
+			{
+				this.lastNodeId = this.lastSeenNode.getIdNode();
+				this.timeStartNode = TimeUtils.millis();
+			} else if (lastSeenNode.getIdNode() == this.lastNodeId)
+			{
+				//Check if too much time in a node
+				if (this.timeStartNode > AINormalPlayer.TIME_FOR_KICK)
+				{
+					//Kicking
+					if (this.currentPath != null)
+						this.currentPath.getPredConn().clear();
+					this.timeStartNode = TimeUtils.millis();
+				}
+			}
+			else
+			{
+				//Node update and timer reset
+				this.lastNodeId = this.lastSeenNode.getIdNode();
+				this.timeStartNode = TimeUtils.millis();
+			}
+		}
+	}
+
+
 	@Override
 	public void setPosition(Vector2 position) 
 	{
 		super.setPosition(position);
 
-
+		this.checkForKick();
+		
 		this.obtainPath();
 
 		this.deleteNodesFromTarget();
@@ -214,6 +250,11 @@ public class AINormalPlayer extends NormalPlayer
 					fireKeyPressed, 
 					bulletsList
 					);
+		}
+		else 
+		{
+			//Avoid floating objects
+			this.currentTarget = this.position;
 		}
 	}
 

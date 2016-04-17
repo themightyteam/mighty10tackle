@@ -11,10 +11,8 @@ public class BasicDecisor
 	
 	
 
-	
-
 	//Returns a random target if none available
-	public int obtainNextPathNode(AIWorld aiWorld)
+	private int obtainNextPathNode(AIWorld aiWorld)
 	{
 		int nextNode = (int) Math.floor(Math.random() * aiWorld.getNodeList().size());
 		
@@ -28,8 +26,10 @@ public class BasicDecisor
 	}
 	
 	
-	public int getTransition(AIWorld aiWorld, PredictedPath predPath)
+	public int getTransition(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
+		PredictedPath predPath = aiPlayer.getCurrentPath();
+		
 		if (predPath == null)
 		{
 			return this.obtainNextPathNode(aiWorld);

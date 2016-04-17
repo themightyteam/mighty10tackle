@@ -49,7 +49,8 @@ public class AlienDecisor extends BasicDecisor
 	}
 
 
-	public int nextTarget(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	@Override
+	public int getTransition(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
 		if (aiPlayer.getSquareTeam() == Player.GREEN_TEAM)
 		{
@@ -65,6 +66,8 @@ public class AlienDecisor extends BasicDecisor
 
 
 		}
+		
+
 
 		this.checkChangeInState();
 
@@ -73,365 +76,372 @@ public class AlienDecisor extends BasicDecisor
 
 	private int obtainNextTarget(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
+		
+		if (this.enemyWithFlag != null)
+			System.out.println("ENEMY HAS FLAG "+ 
+					this.enemyWithFlag.getLastSeenNode().getIdNode());
 
 		int nextState = -1;
-		
+
 		//If i have the flag, return always to base
 		if (this.iHaveTheFlag)
 			this.obtainMyBaseSquare(aiWorld);
-		
+
 		if (this.currentState ==  AlienDecisor.STATE_STATUS_QUO)
 		{
-			if ((aiPlayer.getClass() != null) && 
+			if ((aiPlayer.getCurrentPath() != null) && 
 					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
 			{
 				if (!this.stateTransition)
 					return -1;
 			}
-			
-			 nextState = new StatePropStatusQuo().getNextState();
-			 
+
+			nextState = new StatePropStatusQuo().getNextState();
+
 		} else if (this.currentState ==  AlienDecisor.ONLY_ENEMY_ATTACK)
 		{
-			if ((aiPlayer.getClass() != null) && 
+			if ((aiPlayer.getCurrentPath() != null) && 
 					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
 			{
 				if (!this.stateTransition)
 					return -1;
 			}
-			
-			 nextState = new StatePropOnlyEnemyAttack().getNextState();
+
+			nextState = new StatePropOnlyEnemyAttack().getNextState();
 		}
 		else if (this.currentState ==  AlienDecisor.ONLY_WE_ATTACK)
 		{
-			if ((aiPlayer.getClass() != null) && 
+			if ((aiPlayer.getCurrentPath() != null) && 
 					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
 			{
 				if (!this.stateTransition)
 					return -1;
 			}
-			
-			 nextState = new StatePropOnlyWeAttack().getNextState();
+
+			nextState = new StatePropOnlyWeAttack().getNextState();
 		}
 		else 
 		{
-			if ((aiPlayer.getClass() != null) && 
+			if ((aiPlayer.getCurrentPath() != null) && 
 					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
 			{
 				if (!this.stateTransition)
 					return -1;
 			}
-			
-			 nextState = new StatePropTotalMayhem().getNextState();
+
+			nextState = new StatePropTotalMayhem().getNextState();
 		}
-		
-		
-		switch(nextState)
-		{
-		case  StateProp.GOTOOTHERBASE:
+
+		if (nextState == StateProp.GOTOOTHERBASE)
 			return this.obtainOtherBaseSquare(aiWorld);
-		
-		case StateProp.GOTOMYBASE:
+
+		else if (nextState == StateProp.GOTOMYBASE)
 			return this.obtainMyBaseSquare(aiWorld);
-			
-		case StateProp.GOTORANDOMSQUAREZONE:
+
+		else if( nextState == StateProp.GOTORANDOMSQUAREZONE)
 			return this.obtainRandomSquareInMyZone(aiWorld, aiPlayer);
-			
-		case StateProp.GOTORANDOMSQUARE:
+
+		else if (nextState == StateProp.GOTORANDOMSQUARE)
 			return this.obtainRandomSquare(aiWorld, aiPlayer);
-			
-		case StateProp.GOTOCLOSESTENEMY:
+
+		else if (nextState == StateProp.GOTOCLOSESTENEMY)
 			return this.obtainClosestEnemySquare();
-			
-		case StateProp.GOTOCLOSESTENEMYWITHFLAG:
+
+		else if (nextState == StateProp.GOTOCLOSESTENEMYWITHFLAG)
+		{
+//			System.out.println("CHASE WHO "+this.enemyWithFlag.getLastSeenNode());
+
 			return this.obtainClosestEnemyWithFlagSquare();
-			
-		case StateProp.GOTOCLOSESTTEAMMATE:
+		}
+		else if (nextState == StateProp.GOTOCLOSESTTEAMMATE)
 			return this.obtainClosestTeamMateSquare();
-			
-		case StateProp.GOTOCLOSESTTEAMMATEWITHFLAG:
+
+		else if (nextState == StateProp.GOTOCLOSESTTEAMMATEWITHFLAG)
+		{
+
 			return this.obtainClosestTeamMateWithFlagSquare();
-			
-		default:
+		}
+		else
+		{
 			return this.obtainRandomSquare(aiWorld, aiPlayer);
 		}
-		
-		
-		
+
 	}
 
 
 
-		public int obtainOtherBaseSquare(AIWorld aiWorld)
+	public int obtainOtherBaseSquare(AIWorld aiWorld)
+	{
+		if (this.otherBase != null)
 		{
-			if (this.otherBase != null)
-			{
-				int baseNode = aiWorld.obtainCurrentNode(this.otherBase).getIdNode();
+			int baseNode = aiWorld.obtainCurrentNode(this.otherBase).getIdNode();
 
-				return baseNode;
-			}
-
-			return -1;
+			return baseNode;
 		}
 
+		return -1;
+	}
 
-		public int obtainMyBaseSquare(AIWorld aiWorld)
+
+	public int obtainMyBaseSquare(AIWorld aiWorld)
+	{
+		if (this.myBase != null)
 		{
-			if (this.myBase != null)
-			{
-				int baseNode = aiWorld.obtainCurrentNode(this.myBase).getIdNode();
+			int baseNode = aiWorld.obtainCurrentNode(this.myBase).getIdNode();
 
-				return baseNode;
-			}
-
-			return -1;
+			return baseNode;
 		}
 
-		public int obtainRandomSquareInMyZone(AIWorld aiWorld, AINormalPlayer aiPlayer)
-		{
-			if (aiPlayer.getPosition() != null)
-			{
-				int zone = aiWorld.obtainCurrentZone(aiPlayer.getPosition());
+		return -1;
+	}
 
-				if (zone > -1)
+	public int obtainRandomSquareInMyZone(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	{
+		if (aiPlayer.getPosition() != null)
+		{
+			int zone = aiWorld.obtainCurrentZone(aiPlayer.getPosition());
+
+			if (zone > -1)
+			{
+				List<PathNode> pathsInZone = 
+						aiWorld.getZonePathMap().get(zone);
+
+				int randomPath =  (int) ( Math.floor(Math.random() * pathsInZone.size() ) );
+
+				return pathsInZone.get(randomPath).getIdNode();
+			}
+		}
+
+		return -1;
+	}
+
+	public int obtainRandomSquare(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	{
+		if (aiPlayer.getPosition() != null)
+		{
+			int randomPath = (int) (Math.floor(Math.random() * aiWorld.getPathList().size()));
+
+			return aiWorld.getPathList().get(randomPath).getIdNode();
+
+		}
+
+		return -1;
+	}
+
+
+	public int obtainClosestEnemySquare()
+	{
+		if (this.closestEnemy != null)
+		{
+			if (this.closestEnemy.getLastSeenNode() != null)
+
+				return this.closestEnemy.getLastSeenNode().getIdNode();
+
+		} 
+		return -1;
+	}
+
+	public int obtainClosestEnemyWithFlagSquare()
+	{
+		if (this.enemyWithFlag != null)
+		{
+			if (this.enemyWithFlag.getLastSeenNode() != null)
+
+				return this.enemyWithFlag.getLastSeenNode().getIdNode();
+
+		} 
+		return -1;
+	}
+
+	public int obtainClosestTeamMateSquare()
+	{
+		if (this.closestTeammate != null)
+		{
+			if (this.closestTeammate.getLastSeenNode() != null)
+
+				return this.closestTeammate.getLastSeenNode().getIdNode();
+
+		} 
+		return -1;
+	}
+
+	public int obtainClosestTeamMateWithFlagSquare()
+	{
+		if (this.teamMateWithFlag != null)
+		{
+			if (this.teamMateWithFlag.getLastSeenNode() != null)
+
+				return this.teamMateWithFlag.getLastSeenNode().getIdNode();
+
+		} 
+		return -1;
+	}
+
+
+
+	private void obtainState(List<Player> myTeamList, 
+			List<Player> enemyTeamList, AINormalPlayer aiPlayer)
+	{
+		this.iHaveTheFlag = aiPlayer.isHasFlag();
+
+		//this.closestTeammate = null;
+		//this.teamMateWithFlag = null;
+
+		this.enemyTeamHasFlag = false;
+		this.myTeamHasFlag = false;
+
+		for (Player inListPlayer : myTeamList )
+		{
+
+
+			if ((inListPlayer instanceof NormalPlayer ) ||
+					(inListPlayer instanceof AINormalPlayer))
+			{
+
+				NormalPlayer player = (NormalPlayer) inListPlayer;	
+
+				if (player.isHasFlag())
 				{
-					List<PathNode> pathsInZone = 
-							aiWorld.getZonePathMap().get(zone);
+					this.myTeamHasFlag = true;
 
-					int randomPath =  (int) ( Math.floor(Math.random() * pathsInZone.size() ) );
-
-					return pathsInZone.get(randomPath).getIdNode();
-				}
-			}
-
-			return -1;
-		}
-
-		public int obtainRandomSquare(AIWorld aiWorld, AINormalPlayer aiPlayer)
-		{
-			if (aiPlayer.getPosition() != null)
-			{
-				int randomPath = (int) (Math.floor(Math.random() * aiWorld.getPathList().size()));
-
-				return aiWorld.getPathList().get(randomPath).getIdNode();
-
-			}
-
-			return -1;
-		}
-
-
-		public int obtainClosestEnemySquare()
-		{
-			if (this.closestEnemy != null)
-			{
-				if (this.closestEnemy.getLastSeenNode() != null)
-
-					return this.closestEnemy.getLastSeenNode().getIdNode();
-
-			} 
-			return -1;
-		}
-
-		public int obtainClosestEnemyWithFlagSquare()
-		{
-			if (this.enemyWithFlag != null)
-			{
-				if (this.enemyWithFlag.getLastSeenNode() != null)
-
-					return this.enemyWithFlag.getLastSeenNode().getIdNode();
-
-			} 
-			return -1;
-		}
-
-		public int obtainClosestTeamMateSquare()
-		{
-			if (this.closestTeammate != null)
-			{
-				if (this.closestTeammate.getLastSeenNode() != null)
-
-					return this.closestTeammate.getLastSeenNode().getIdNode();
-
-			} 
-			return -1;
-		}
-
-		public int obtainClosestTeamMateWithFlagSquare()
-		{
-			if (this.teamMateWithFlag != null)
-			{
-				if (this.teamMateWithFlag.getLastSeenNode() != null)
-
-					return this.teamMateWithFlag.getLastSeenNode().getIdNode();
-
-			} 
-			return -1;
-		}
-
-
-
-		private void obtainState(List<Player> myTeamList, 
-				List<Player> enemyTeamList, AINormalPlayer aiPlayer)
-		{
-			this.iHaveTheFlag = aiPlayer.isHasFlag();
-
-			this.closestTeammate = null;
-			this.teamMateWithFlag = null;
-
-			this.enemyTeamHasFlag = false;
-			this.myTeamHasFlag = false;
-
-			for (Player inListPlayer : myTeamList )
-			{
-
-
-				if ((inListPlayer instanceof NormalPlayer ) ||
-						(inListPlayer instanceof AINormalPlayer))
-				{
-
-					NormalPlayer player = (NormalPlayer) inListPlayer;	
-
-					if (player.isHasFlag())
+					if (this.teamMateWithFlag == null)
 					{
-						this.myTeamHasFlag = true;
-
-						if (this.teamMateWithFlag == null)
+						this.teamMateWithFlag = player;
+					}
+					else
+					{
+						if (this.isTeammateCloser(player.getPosition(), 
+								this.teamMateWithFlag.getPosition(), 
+								aiPlayer.getPosition()))
 						{
 							this.teamMateWithFlag = player;
 						}
-						else
-						{
-							if (this.isTeammateCloser(player.getPosition(), 
-									this.teamMateWithFlag.getPosition(), 
-									aiPlayer.getPosition()))
-							{
-								this.teamMateWithFlag = player;
-							}
-						}
-					}
-
-					//Check if the player is the closest teammate
-					if (this.closestTeammate == null)
-						this.closestTeammate = player;
-					else
-					{
-						if (this.isTeammateCloser(player.getPosition(), 
-								this.closestTeammate.getPosition(), 
-								aiPlayer.getPosition()))
-						{
-							this.closestTeammate = player;
-						}
 					}
 				}
 
+				//Check if the player is the closest teammate
+				if (this.closestTeammate == null)
+					this.closestTeammate = player;
+				else
+				{
+					if (this.isTeammateCloser(player.getPosition(), 
+							this.closestTeammate.getPosition(), 
+							aiPlayer.getPosition()))
+					{
+						this.closestTeammate = player;
+					}
+				}
 			}
 
-			//Check enemy information
+		}
 
-			this.enemyWithFlag = null;
-			this.closestEnemy = null;
+		//Check enemy information
+
+		//this.enemyWithFlag = null;
+		//this.closestEnemy = null;
 
 
-			for (Player inListPlayer : enemyTeamList )
+		for (Player inListPlayer : enemyTeamList )
+		{
+
+			if ((inListPlayer instanceof NormalPlayer ) ||
+					(inListPlayer instanceof AINormalPlayer))
 			{
 
-				if ((inListPlayer instanceof NormalPlayer ) ||
-						(inListPlayer instanceof AINormalPlayer))
+				NormalPlayer player = (NormalPlayer) inListPlayer;		
+
+				if (player.isHasFlag())
 				{
+					this.enemyTeamHasFlag = true;
 
-					NormalPlayer player = (NormalPlayer) inListPlayer;		
-
-					if (player.isHasFlag())
+					if (this.enemyWithFlag == null)
 					{
-						this.enemyTeamHasFlag = true;
-
-						if (this.enemyWithFlag == null)
+						this.enemyWithFlag = player;
+						
+						System.out.println(this.enemyWithFlag.getLastSeenNode().getIdNode());
+					}
+					else
+					{
+						if (this.isTeammateCloser(player.getPosition(), 
+								this.enemyWithFlag.getPosition(), 
+								aiPlayer.getPosition()))
 						{
 							this.enemyWithFlag = player;
 						}
-						else
-						{
-							if (this.isTeammateCloser(player.getPosition(), 
-									this.enemyWithFlag.getPosition(), 
-									aiPlayer.getPosition()))
-							{
-								this.enemyWithFlag = player;
-							}
-						}
 					}
-
-
-					//Check if the player is the closest enemy
-					if (this.closestEnemy == null)
-						this.closestEnemy = player;
-					else
-					{
-						if (this.isTeammateCloser(player.getPosition(), 
-								this.closestEnemy.getPosition(), 
-								aiPlayer.getPosition()))
-						{
-							this.closestEnemy = player;
-						}
-					}
-
 				}
-			}	
-		}
 
 
-		private void checkChangeInState() 
+				//Check if the player is the closest enemy
+				if (this.closestEnemy == null)
+					this.closestEnemy = player;
+				else
+				{
+					if (this.isTeammateCloser(player.getPosition(), 
+							this.closestEnemy.getPosition(), 
+							aiPlayer.getPosition()))
+					{
+						this.closestEnemy = player;
+					}
+				}
+
+			}
+		}	
+	}
+
+
+	private void checkChangeInState() 
+	{
+
+		this.stateTransition = false;
+		if ((!this.enemyTeamHasFlag) && (!this.myTeamHasFlag))
 		{
-
-			this.stateTransition = false;
-			if ((!this.enemyTeamHasFlag) && (!this.myTeamHasFlag))
-			{
-				if (this.currentState != AlienDecisor.STATE_STATUS_QUO)
-					this.stateTransition = true;
-				this.currentState = AlienDecisor.STATE_STATUS_QUO;
-			}
-			else if (this.enemyTeamHasFlag && !this.myTeamHasFlag)
-			{
-				if (this.currentState != AlienDecisor.ONLY_ENEMY_ATTACK)	
-					this.stateTransition = true;
-				this.currentState = AlienDecisor.ONLY_ENEMY_ATTACK;
-
-			}
-			else if (!this.enemyTeamHasFlag && this.myTeamHasFlag)
-			{
-				if (this.currentState != AlienDecisor.ONLY_WE_ATTACK)
-					this.stateTransition = true;
-				this.currentState = AlienDecisor.ONLY_WE_ATTACK;
-			}
-			else if (this.enemyTeamHasFlag && this.myTeamHasFlag)
-			{
-				if (this.currentState != AlienDecisor.TOTAL_MAYHEM)
-					this.stateTransition = true;
-				this.currentState = AlienDecisor.TOTAL_MAYHEM;
-			}
-
-
+			if (this.currentState != AlienDecisor.STATE_STATUS_QUO)
+				this.stateTransition = true;
+			this.currentState = AlienDecisor.STATE_STATUS_QUO;
 		}
-
-
-		private boolean isTeammateCloser(Vector2 position, Vector2 prevPosition, Vector2 myPosition)
+		else if (this.enemyTeamHasFlag && !this.myTeamHasFlag)
 		{
-			if ((this.euclideanDistance(position, myPosition)) < 
-					(this.euclideanDistance(prevPosition, myPosition)))
-			{
-				return true;
-			}
-			else
-				return false;
+			if (this.currentState != AlienDecisor.ONLY_ENEMY_ATTACK)	
+				this.stateTransition = true;
+			this.currentState = AlienDecisor.ONLY_ENEMY_ATTACK;
 
 		}
-
-		private double euclideanDistance(Vector2 one, Vector2 other)
+		else if (!this.enemyTeamHasFlag && this.myTeamHasFlag)
 		{
-			return 0.5 * Math.pow(one.x - other.x, 2 ) + Math.pow(other.y - other.y, 2);
+			if (this.currentState != AlienDecisor.ONLY_WE_ATTACK)
+				this.stateTransition = true;
+			this.currentState = AlienDecisor.ONLY_WE_ATTACK;
 		}
-
-
+		else if (this.enemyTeamHasFlag && this.myTeamHasFlag)
+		{
+			if (this.currentState != AlienDecisor.TOTAL_MAYHEM)
+				this.stateTransition = true;
+			this.currentState = AlienDecisor.TOTAL_MAYHEM;
+		}
 
 
 	}
+
+
+	private boolean isTeammateCloser(Vector2 position, Vector2 prevPosition, Vector2 myPosition)
+	{
+		if ((this.euclideanDistance(position, myPosition)) < 
+				(this.euclideanDistance(prevPosition, myPosition)))
+		{
+			return true;
+		}
+		else
+			return false;
+
+	}
+
+	private double euclideanDistance(Vector2 one, Vector2 other)
+	{
+		return 0.5 * Math.pow(one.x - other.x, 2 ) + Math.pow(other.y - other.y, 2);
+	}
+
+
+
+
+}
