@@ -1092,5 +1092,22 @@ public class MightyWorld {
 		this.sound = sound;
 	}
 
+	public int getGreenScore() {
+		return greenScore;
+	}
+
+	public void setGreenScore(int greenScore) {
+		this.greenScore = greenScore;
+	}
+
+	public int getVioletScore() {
+		return violetScore;
+	}
+
+	public void setVioletScore(int violetScore) {
+		this.violetScore = violetScore;
+	}
+
+	
 
 }

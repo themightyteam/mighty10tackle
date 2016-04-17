@@ -261,7 +261,7 @@ public class AIWorld
 		//Finally update the cost to the right value
 		for (Integer key : this.graphMap.keySet())
 		{
-			System.out.println("Updating connections for "+ key);
+			//System.out.println("Updating connections for "+ key);
 			
 			//Loop over all the connections
 			for (int i = 0; i < this.graphMap.get(key).size(); i++)

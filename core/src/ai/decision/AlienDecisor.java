@@ -80,10 +80,6 @@ public class AlienDecisor extends BasicDecisor
 
 	private int obtainNextTarget(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
-		
-		if (this.enemyWithFlag != null)
-			System.out.println("ENEMY HAS FLAG "+ 
-					this.enemyWithFlag.getLastSeenNode().getIdNode());
 
 		int nextState = -1;
 

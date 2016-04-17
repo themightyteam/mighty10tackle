@@ -131,7 +131,7 @@ public class NormalPlayer extends Player
 			
 		}
 		
-		this.printCurrentSquare();
+		//this.printCurrentSquare();
 	}
 
 	/**
@@ -232,9 +232,7 @@ public class NormalPlayer extends Player
 						((NormalPlayer) this.world.getHumanPlayer()).getPosition().x 
 						- newPos.x  ) < SoundAssets.SOUND_RANGE)
 				{
-					System.out.println("AMATH "+ Math.abs(
-						((NormalPlayer) this.world.getHumanPlayer()).getPosition().x 
-						- newPos.x  ) );
+					
 						this.world.getSound().playShot();
 				}
 				
@@ -335,6 +333,14 @@ public class NormalPlayer extends Player
 
 	public void setLastSeenNode(PathNode lastSeenNode) {
 		this.lastSeenNode = lastSeenNode;
+	}
+
+	public MightyWorld getWorld() {
+		return world;
+	}
+
+	public void setWorld(MightyWorld world) {
+		this.world = world;
 	}
 
 	

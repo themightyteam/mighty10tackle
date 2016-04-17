@@ -26,6 +26,8 @@ public class ScreenLevel1 extends DefaultScreen {
 	private static final int STATE_DEAD = 2;
 	private static final int STATE_DEADPARADOX = 3;
 	private static final int STATE_VICTORY = 4;
+	private static final int STATE_LOSE = 5;
+	private static final int STATE_DRAW = 6;
 
 	private static final long TIME_TO_FINISH = 200000; //200 seconds
 
@@ -45,11 +47,10 @@ public class ScreenLevel1 extends DefaultScreen {
 
 	AIWorld aiWorld;
 
-	public ScreenLevel1(Game game, int level, Array<Array<RecordedStep>> allRecordedSteps) {
+	public ScreenLevel1(Game game) {
 		super(game);
 		// TODO Auto-generated constructor stub
 
-		this.currentLevel = level;
 
 		this.state = STATE_INIT;
 
@@ -71,10 +72,10 @@ public class ScreenLevel1 extends DefaultScreen {
 		this.aiWorld = new AIWorld(new TiledMapProcessor(this.map), "zoning", "pathfinding");
 
 		// FIXME perform the test of A-star (only for DEBUG)
-		this.aiWorld.aStarFullTest();
+		//this.aiWorld.aStarFullTest();
 
 		//Init the world
-		this.gameWorld.init(this.map, this.currentLevel, allRecordedSteps, TIME_TO_FINISH, this.aiWorld);
+		this.gameWorld.init(this.map, this.currentLevel,null, TIME_TO_FINISH, this.aiWorld);
 
 		//Create rendered
 		this.mightyRender = new MightyRender(this.gameWorld, this.map);
@@ -135,7 +136,8 @@ public class ScreenLevel1 extends DefaultScreen {
 			break;
 
 		case STATE_VICTORY:	
-		case STATE_DEADPARADOX:	
+		case STATE_LOSE:
+		case STATE_DRAW:
 		case STATE_DEAD:	
 			changeOfScreen();
 			break;
@@ -149,54 +151,44 @@ public class ScreenLevel1 extends DefaultScreen {
 	{
 		long currentTime = TimeUtils.millis();
 
-		if ((this.state == STATE_DEAD))
+		if ((this.state == STATE_DEAD)||
+				(this.state == STATE_VICTORY) ||
+				(this.state == STATE_LOSE)|| 
+				(this.state == STATE_DRAW))
 		{	
 			if (currentTime - this.epochsInDead > CommonSettings.MSWAIT_AFTER_DEAD)
-				this.mightyGame.setScreen(new ScoreScreen(this.mightyGame));
+				this.mightyGame.setScreen(new ScreenLevel1(this.mightyGame));
 		}
-		else if (this.state == STATE_DEADPARADOX)
-		{
-			if (currentTime - this.epochsInDead > CommonSettings.MSWAIT_AFTER_DEAD)
-				this.mightyGame.setScreen(new ParadoxScreen(this.mightyGame));
-		}
-		else if (this.state == STATE_VICTORY)
-		{
-			if (this.currentLevel >= 10) {
-				this.mightyGame.setScreen(new FinalVictoryScreen(this.mightyGame));
-			}
 
-			// Create an array of player step records to pass to the next screen
-			Array<Array<RecordedStep>> allRecordedSteps = this.gameWorld.getAllRecordedSteps();
-
-			this.mightyGame.setScreen(new ScreenLevel1(this.mightyGame, this.currentLevel + 1, allRecordedSteps));
-		}
 	}
 
 	private void checkEndCondition() {
-		if (this.gameWorld.getPlayerStatus() == Player.STATE_DEAD) {
-			// System.out.println("You are dead :'(");
-			this.epochsInDead = TimeUtils.millis();
-			this.state = STATE_DEAD;
-		}
 
 		if (this.gameWorld.getPlayerStatus() == Player.STATE_TIMEOUT)
 		{
-			this.epochsInDead = TimeUtils.millis();
-			this.state = STATE_DEAD;
+			if (this.gameWorld.getGreenScore() > this.gameWorld.getVioletScore())
+			{
+
+				this.epochsInDead = TimeUtils.millis();
+				this.state = STATE_VICTORY;
+				this.gameWorld.getSound().playVictorySound();
+			}
+			else if (this.gameWorld.getGreenScore() < this.gameWorld.getVioletScore())
+			{
+
+				this.epochsInDead = TimeUtils.millis();
+				this.state = STATE_LOSE;
+				this.gameWorld.getSound().playLoseSound();
+			}
+			else
+			{
+				this.state = STATE_DRAW;
+			}
+
 		}
 
 
-		if (this.gameWorld.getPlayerStatus() == Player.STATE_PARADOX) {
-			// System.out.println("You created a paradox! :'(");
-			this.epochsInDead = TimeUtils.millis();
-			this.state = STATE_DEADPARADOX;
-		}
 
-		if (this.gameWorld.getPlayerStatus() == Player.STATE_VICTORY) {
-			// System.out.println("Next Level! :D " +
-			// String.valueOf(this.currentLevel));
-			this.state = STATE_VICTORY;
-		}
 	}
 
 	private void updatePad() {
