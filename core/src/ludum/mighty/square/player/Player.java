@@ -70,6 +70,14 @@ public class Player {
 	/** True if the player has the flag. **/
 	boolean hasFlag;
 
+	public boolean hasFlag() {
+		return hasFlag;
+	}
+
+	public void setHasFlag(boolean hasFlag) {
+		this.hasFlag = hasFlag;
+	}
+
 	/** True if the player is invisible. **/
 	boolean invisible;
 

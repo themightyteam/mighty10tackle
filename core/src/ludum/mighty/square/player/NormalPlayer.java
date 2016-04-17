@@ -29,9 +29,6 @@ public class NormalPlayer extends Player
 	// type of player (Normal, Spy, etc)
 	int type;
 
-	// True if the player has the flag
-	boolean hasFlag;
-
 	// True if the player was invisible
 	boolean invisible;
 

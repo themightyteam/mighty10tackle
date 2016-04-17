@@ -85,12 +85,15 @@ public class EnemyFactory {
 			{
 				return new Lever(idEnemy, depId, duration, otherPatternList);
 			}
- else if (enemyType.toUpperCase().equals("GREENRESPAWNPOINT"))
-			{
+ else if (enemyType.toUpperCase().equals("GREENRESPAWNPOINT")) {
 				return new GreenRespawnPoint(idEnemy, depId, duration, otherPatternList);
-			}
- else if (enemyType.toUpperCase().equals("VIOLETRESPAWNPOINT")) {
+			} else if (enemyType.toUpperCase().equals("VIOLETRESPAWNPOINT")) {
 				return new VioletRespawnPoint(idEnemy, depId, duration, otherPatternList);
+			}
+ else if (enemyType.toUpperCase().equals("GREENFLAG")) {
+				return new GreenFlag(idEnemy, depId, duration, otherPatternList);
+			} else if (enemyType.toUpperCase().equals("VIOLETFLAG")) {
+				return new VioletFlag(idEnemy, depId, duration, otherPatternList);
 			}
 			else if (enemyType.toUpperCase().equals("BEER"))
 			{

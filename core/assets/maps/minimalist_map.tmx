@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="16" tileheight="16" nextobjectid="888">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="16" tileheight="16" nextobjectid="890">
  <tileset firstgid="1" name="final_patterns" tilewidth="16" tileheight="16" tilecount="100">
   <image source="minimalist_tileset.png" width="160" height="160"/>
  </tileset>
@@ -1225,7 +1225,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="pathfinding" visible="0">
+ <objectgroup name="pathfinding">
   <properties>
    <property name="unitScale" value="0"/>
   </properties>
@@ -3015,7 +3015,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="zoning" visible="0">
+ <objectgroup name="zoning">
   <properties>
    <property name="unitScale" value="0"/>
   </properties>
@@ -3090,7 +3090,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="respawn" visible="0">
+ <objectgroup name="respawn">
   <object id="882" name="GreenRespawn1" type="object" x="272" y="608" width="16" height="16">
    <properties>
     <property name="id" value="1"/>
@@ -3127,6 +3127,22 @@
    <ellipse/>
   </object>
   <object id="887" name="VioletRespawn1" type="object" x="1791" y="592" width="16" height="16">
+   <properties>
+    <property name="id" value="1"/>
+    <property name="team" value="violet"/>
+   </properties>
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="flags">
+  <object id="888" name="GreenFlag" type="object" x="352" y="672" width="16" height="16">
+   <properties>
+    <property name="id" value="1"/>
+    <property name="team" value="green"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="889" name="VioletFlag" type="object" x="1680" y="672" width="16" height="16">
    <properties>
     <property name="id" value="1"/>
     <property name="team" value="violet"/>
