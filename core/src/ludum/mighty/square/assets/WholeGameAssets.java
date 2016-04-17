@@ -136,6 +136,11 @@ public class WholeGameAssets extends AbstractAssets {
 	public static final int GHOST_DEATH = 67;
 	public static final int GHOST_CHARRED = 68;
 	
+	public static final int GREEN_TEAM_SCORES = 5001;
+	public static final int VIOLET_TEAM_SCORES = 5002;
+	public static final int GREEN_TEAM_HAS_FLAG = 5003;
+	public static final int VIOLET_TEAM_HAS_FLAG = 5004;
+
 	//Player Animations and Textures
 	Animation playerGreenIdle;
 	Animation playerGreenRunning;
@@ -306,6 +311,12 @@ public class WholeGameAssets extends AbstractAssets {
 	TextureRegion part2BlockTexture;
 	TextureRegion part3BlockTexture;
 	
+	// Scores
+	TextureRegion greenTeamScores;
+	TextureRegion violetTeamScores;
+	TextureRegion greenTeamHasFlag;
+	TextureRegion violetTeamHasFlag;
+
 	@Override
 	public TextureRegion getAsset(int asset) {
 		// TODO Auto-generated method stub
@@ -755,6 +766,21 @@ public class WholeGameAssets extends AbstractAssets {
 			texture = new TextureRegion(this.breakBlock.getKeyFrame(time, true));
 			return texture;
 			
+		case GREEN_TEAM_SCORES:
+			texture = new TextureRegion(this.greenTeamScores);
+			return texture;
+
+		case VIOLET_TEAM_SCORES:
+			texture = new TextureRegion(this.violetTeamScores);
+			return texture;
+
+		case GREEN_TEAM_HAS_FLAG:
+			texture = new TextureRegion(this.greenTeamHasFlag);
+			return texture;
+
+		case VIOLET_TEAM_HAS_FLAG:
+			texture = new TextureRegion(this.violetTeamHasFlag);
+			return texture;
 
 		}
 
@@ -1049,6 +1075,12 @@ public class WholeGameAssets extends AbstractAssets {
 				);
 		this.breakBlock.setPlayMode(PlayMode.LOOP);
 		
+		// Scores textures
+		this.greenTeamScores = new TextureRegion(allThingsSheet, 7 * 16, 9 * 16, 3 * 16, 16);
+		this.violetTeamScores = new TextureRegion(allThingsSheet, 7 * 16, 6 * 16, 3 * 16, 16);
+		this.greenTeamHasFlag = new TextureRegion(allThingsSheet, 7 * 16, 5 * 16, 3 * 16, 16);
+		this.violetTeamHasFlag = new TextureRegion(allThingsSheet, 7 * 16, 4 * 16, 3 * 16, 16);
+
 	}
 
 }

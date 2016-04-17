@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import ludum.mighty.square.assets.WholeGameAssets;
 import ludum.mighty.square.noPlayer.NoPlayer;
 import ludum.mighty.square.player.Player;
+import ludum.mighty.square.settings.CommonSettings;
 import ludum.mighty.square.world.MightyWorld;
 
 public class MightyRender 
@@ -317,6 +318,38 @@ public class MightyRender
 		this.renderer.getBatch().end();
 	}
 
+	public void renderScores() {
+		this.renderer.getBatch().begin();
+		if (this.gameWorld.getGreenScore() == this.gameWorld.SCORE_STATUS_GREEN_HAS_FLAG) {
+			TextureRegion region = this.gameAssets.getAnimation(WholeGameAssets.GREEN_TEAM_HAS_FLAG, 0);
+			this.renderer.getBatch().draw(region, this.gameWorld.getCameraPositionX() - CommonSettings.CAMERA_WIDTH / 2,
+					this.gameWorld.getCameraPositionY() - CommonSettings.CAMERA_HEIGHT / 2,
+					region.getRegionWidth() / 16f, region.getRegionHeight() / 16f);
+		} else if (this.gameWorld.getGreenScore() == this.gameWorld.SCORE_STATUS_GREEN_HAS_SCORED) {
+			TextureRegion region = this.gameAssets.getAnimation(WholeGameAssets.GREEN_TEAM_SCORES, 0);
+		this.renderer.getBatch().draw(region, this.gameWorld.getCameraPositionX() - CommonSettings.CAMERA_WIDTH / 2,
+				this.gameWorld.getCameraPositionY() - CommonSettings.CAMERA_HEIGHT / 2,
+				region.getRegionWidth() / 16f, region.getRegionHeight() / 16f);
+		}
+
+		if (this.gameWorld.getVioletScore() == this.gameWorld.SCORE_STATUS_VIOLET_HAS_FLAG) {
+			TextureRegion region = this.gameAssets.getAnimation(WholeGameAssets.VIOLET_TEAM_HAS_FLAG, 0);
+			this.renderer.getBatch().draw(region,
+					this.gameWorld.getCameraPositionX() + (CommonSettings.CAMERA_WIDTH / 2)
+							- region.getRegionWidth() / 16f,
+					this.gameWorld.getCameraPositionY() - CommonSettings.CAMERA_HEIGHT / 2,
+					region.getRegionWidth() / 16f, region.getRegionHeight() / 16f);
+		} else if (this.gameWorld.getVioletScore() == this.gameWorld.SCORE_STATUS_VIOLET_HAS_SCORED) {
+			TextureRegion region = this.gameAssets.getAnimation(WholeGameAssets.VIOLET_TEAM_SCORES, 0);
+			this.renderer.getBatch().draw(region,
+					this.gameWorld.getCameraPositionX() + (CommonSettings.CAMERA_WIDTH / 2)
+							- region.getRegionWidth() / 16f,
+					this.gameWorld.getCameraPositionY() - CommonSettings.CAMERA_HEIGHT / 2,
+					region.getRegionWidth() / 16f, region.getRegionHeight() / 16f);
+		}
+		this.renderer.getBatch().end();
+	}
+
 	public void renderEnemies()
 	{
 		this.renderer.getBatch().begin();
@@ -349,6 +382,7 @@ public class MightyRender
 		//this.renderEnemies();
 		this.renderPlayer();
 		this.renderBullets();
+		this.renderScores();
 		// this.box2DRenderer.render(this.gameWorld.getWorld(),
 		// this.guiCam.combined);
 	}

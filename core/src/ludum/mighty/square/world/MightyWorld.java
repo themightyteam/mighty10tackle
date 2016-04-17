@@ -3,6 +3,22 @@ package ludum.mighty.square.world;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import ai.world.AIWorld;
 import ludum.mighty.square.assets.SoundAssets;
 import ludum.mighty.square.collisions.CollisionsListener;
 import ludum.mighty.square.noPlayer.Bullet;
@@ -20,22 +36,6 @@ import ludum.mighty.square.player.Player;
 import ludum.mighty.square.player.RecordedStep;
 import ludum.mighty.square.settings.CommonSettings;
 import net.dermetfan.gdx.physics.box2d.Box2DMapObjectParser;
-import ai.world.AIWorld;
-
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * @author Mighty Team
@@ -87,6 +87,26 @@ public class MightyWorld {
 	private int greenScore;
 	/** **/
 	private int violetScore;
+
+	/** status of the score of the green team in the game **/
+	private int scoreGreenStatus;
+	public static final int SCORE_STATUS_GREEN_NOTHING = 0;
+	public static final int SCORE_STATUS_GREEN_HAS_FLAG = 1;
+	public static final int SCORE_STATUS_GREEN_HAS_SCORED = 2;
+
+	public int getScoreGreenStatus() {
+		return this.scoreGreenStatus;
+	}
+
+	/** status of the score of the violet team in the game **/
+	private int scoreVioletStatus;
+	public static final int SCORE_STATUS_VIOLET_NOTHING = 0;
+	public static final int SCORE_STATUS_VIOLET_HAS_FLAG = 1;
+	public static final int SCORE_STATUS_VIOLET_HAS_SCORED = 2;
+
+	public int getScoreVioletStatus() {
+		return this.scoreVioletStatus;
+	}
 
 	/** Real time of beginning of the game in milliseconds. */
 	long startEpoch;
@@ -718,6 +738,7 @@ public class MightyWorld {
 						p.setHasFlag(false);
 						p.setHasScored(false);
 						this.violetFlagsList.get(0).setTaken(false);
+						this.scoreVioletStatus = this.SCORE_STATUS_VIOLET_NOTHING;
 					}
 					int x = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getX();
 					int y = this.greenRespawnPointList.get(this.activeGreenRespawnPoint).getY();
@@ -733,6 +754,7 @@ public class MightyWorld {
 						p.setHasFlag(false);
 						p.setHasScored(false);
 						this.greenFlagsList.get(0).setTaken(false);
+						this.scoreGreenStatus = this.SCORE_STATUS_GREEN_NOTHING;
 					}
 					int x = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getX();
 					int y = this.violetRespawnPointList.get(this.activeVioletRespawnPoint).getY();
@@ -750,6 +772,7 @@ public class MightyWorld {
 					p.setHasScored(false);
 					this.violetFlagsList.get(0).setTaken(false);
 					this.greenScore += 1;
+					this.scoreGreenStatus = this.SCORE_STATUS_GREEN_HAS_SCORED;
 					// System.out.println(
 					// "Green team scores!! GreenTeam " + this.greenScore + " -
 					// Violet Team " + this.violetScore);
@@ -758,6 +781,7 @@ public class MightyWorld {
 					p.setHasScored(false);
 					this.greenFlagsList.get(0).setTaken(false);
 					this.violetScore += 1;
+					this.scoreVioletStatus = this.SCORE_STATUS_VIOLET_HAS_SCORED;
 					// System.out.println(
 					// "Violet team scores!! GreenTeam " + this.greenScore + " -
 					// Violet Team " + this.violetScore);
