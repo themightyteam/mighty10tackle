@@ -25,7 +25,10 @@ public class Player {
 	public static final int STATE_DEAD = 2;
 	public static final int STATE_PARADOX = 3;
 	public static final int STATE_VICTORY = 4;
-	public static final int STATE_TIMEOUT = 5; 
+	public static final int STATE_TIMEOUT = 5;
+	public static final int STATE_ZOMBIE = 6;
+	
+	public static final long TIME_TILL_RESPAWN = 5000;  //FIXME: change location of here
 
 	private boolean isReplaying;
 	private int activeInLevel; // the level where the user controls this player
@@ -43,6 +46,8 @@ public class Player {
 
 	/** true if this played is controlled by a human (no AI) **/
 	boolean isHumanControlled;
+	
+	long timeDeath = -1;
 
 	public boolean isHumanControlled() {
 		return isHumanControlled;

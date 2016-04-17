@@ -15,7 +15,7 @@ public class MightyGame extends Game {
 	public void create() {
 
 		//FIXME: Set intro screen
-		setScreen(new ScreenLevel1(this, startLevel, null));
+		setScreen(new ScreenLevel1(this));
 		//setScreen(new ScoreScreen(this));	
 	}
 	
