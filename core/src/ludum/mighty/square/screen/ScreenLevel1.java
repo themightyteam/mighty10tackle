@@ -163,7 +163,7 @@ public class ScreenLevel1 extends DefaultScreen {
 				else if (this.state == STATE_LOSE)
 					this.mightyGame.setScreen(new LoseScreen(this.mightyGame));
 				else
-					this.mightyGame.setScreen(new LoseScreen(this.mightyGame));
+					this.mightyGame.setScreen(new TieScreen(this.mightyGame));
 			}
 		}
 
@@ -189,6 +189,7 @@ public class ScreenLevel1 extends DefaultScreen {
 			}
 			else
 			{
+				this.epochsInDead = TimeUtils.millis();
 				this.state = STATE_DRAW;
 			}
 

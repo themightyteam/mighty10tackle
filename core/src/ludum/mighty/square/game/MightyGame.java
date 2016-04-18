@@ -10,13 +10,11 @@ public class MightyGame extends Game {
 	int highScore = 0;
 	int lastScore = 0;
 	
-	private final int startLevel = 1;
 	@Override
 	public void create() {
 
 		//FIXME: Set intro screen
 		setScreen(new IntroScreen(this));
-		//setScreen(new ScoreScreen(this));	
 	}
 	
 	public void updateHiScore()

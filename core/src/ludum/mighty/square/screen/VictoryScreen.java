@@ -20,12 +20,14 @@ public class VictoryScreen extends DefaultScreen implements Screen {
 	int waitFramesForHandle = 100;
 	private int tw;
 	private int th;
+	private int w;
+	private int h;
 
 	public VictoryScreen(Game game) {
 		super(game);
 
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		this.w = Gdx.graphics.getWidth();
+		this.h = Gdx.graphics.getHeight();
 		this.cam = new OrthographicCamera();
 		this.cam.setToOrtho(false, 2f, 2f * w / h);
 		this.cam.position.set(w / 2f, h / 2f, 0);
@@ -46,6 +48,9 @@ public class VictoryScreen extends DefaultScreen implements Screen {
 		if (this.waitFramesForHandle <= 0)
 			handleInput();
 
+		this.w = Gdx.graphics.getWidth();
+		this.h = Gdx.graphics.getHeight();
+		this.cam.position.set(w / 2f, h / 2f, 0);
 		this.cam.update();
 		batch.setProjectionMatrix(this.cam.combined);
 
