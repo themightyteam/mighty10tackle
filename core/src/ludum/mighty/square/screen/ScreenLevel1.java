@@ -66,7 +66,7 @@ public class ScreenLevel1 extends DefaultScreen {
 		this.gameWorld = new MightyWorld();
 
 		//Init map
-		this.map = new TmxMapLoader().load("maps/minimalist_map.tmx");
+		this.map = new TmxMapLoader().load("maps/minimalist_mapv2.tmx");
 
 		// Init the AI
 		this.aiWorld = new AIWorld(new TiledMapProcessor(this.map), "zoning", "pathfinding");
