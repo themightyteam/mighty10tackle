@@ -8,13 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import ai.tiled.TiledMapProcessor;
 import ai.world.AIWorld;
 import ludum.mighty.square.player.Player;
-import ludum.mighty.square.player.RecordedStep;
 import ludum.mighty.square.render.MightyRender;
 import ludum.mighty.square.settings.CommonSettings;
 import ludum.mighty.square.world.MightyWorld;
@@ -160,7 +158,12 @@ public class ScreenLevel1 extends DefaultScreen {
 			{
 				this.gameWorld.getSound().disposeObjects();	
 				
-				this.mightyGame.setScreen(new ScreenLevel1(this.mightyGame));
+				if (this.state == STATE_VICTORY)
+					this.mightyGame.setScreen(new VictoryScreen(this.mightyGame));
+				else if (this.state == STATE_LOSE)
+					this.mightyGame.setScreen(new LoseScreen(this.mightyGame));
+				else
+					this.mightyGame.setScreen(new LoseScreen(this.mightyGame));
 			}
 		}
 

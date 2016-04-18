@@ -2,7 +2,7 @@ package ludum.mighty.square.game;
 
 import com.badlogic.gdx.Game;
 
-import ludum.mighty.square.screen.ScreenLevel1;
+import ludum.mighty.square.screen.IntroScreen;
 
 public class MightyGame extends Game {
 
@@ -15,7 +15,7 @@ public class MightyGame extends Game {
 	public void create() {
 
 		//FIXME: Set intro screen
-		setScreen(new ScreenLevel1(this));
+		setScreen(new IntroScreen(this));
 		//setScreen(new ScoreScreen(this));	
 	}
 	
