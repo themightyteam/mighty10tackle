@@ -8,9 +8,9 @@ public class StatePropOnlyWeAttack extends StateProp
 		this.propGoToMyBase = 0.3;
 		this.propGoToRandomSquareInZone = 0.4;
 		this.propGoToRandomSquare = 0.5;
-		this.propGoToClosestEnemy = 0.55;
+		this.propGoToClosestEnemy = 0.7;
 		this.propGoToClosestEnemyWithFlag = this.propGoToClosestEnemy;
-		this.propGoToClosestTeammate = 0.65;
+		this.propGoToClosestTeammate = 0.90;
 		this.propGoToClosestTeamMateWithFlag = 1;
 	}
 	

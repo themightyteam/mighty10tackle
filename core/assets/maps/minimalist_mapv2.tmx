@@ -3002,7 +3002,7 @@
   <object id="895" name="256" type="object" x="1043" y="447.034" width="60.5" height="15.9091">
    <properties>
     <property name="jumpList" value="128,129"/>
-    <property name="landingList" value="155,130"/>
+    <property name="landingList" value="130,154,156"/>
     <property name="normalList" value=""/>
    </properties>
   </object>
