@@ -2,9 +2,9 @@ package ai.pathfinding.commons;
 
 public class Connection2D extends Connection {
 
-	public static final double COST_JUMP = 0.7;
-	public static final double COST_LAND = 0.5;
-	public static final double COST_NORMAL = 1;
+	public static final double COST_JUMP = 1;
+	public static final double COST_LAND = 0.6;
+	public static final double COST_NORMAL = 0.8;
 	
 	boolean isJump;
 	boolean isLanding;
