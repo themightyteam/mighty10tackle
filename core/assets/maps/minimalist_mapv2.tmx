@@ -1318,7 +1318,7 @@
   </object>
   <object id="629" name="16" type="object" x="448.159" y="703.193" width="31.6591" height="15.9091">
    <properties>
-    <property name="jumpList" value="17,18,19,76"/>
+    <property name="jumpList" value="17,18,19,76,18"/>
     <property name="landingList" value="15,84"/>
     <property name="normalList" value=""/>
    </properties>
@@ -1696,7 +1696,7 @@
   </object>
   <object id="683" name="70" type="object" x="384" y="558.951" width="31.6667" height="15.9091">
    <properties>
-    <property name="jumpList" value="71,62,30,69"/>
+    <property name="jumpList" value="71,62,30,69,71"/>
     <property name="landingList" value="73,20,19"/>
     <property name="normalList" value=""/>
    </properties>
