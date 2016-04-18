@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="16" tileheight="16" nextobjectid="897">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="16" tileheight="16" nextobjectid="898">
  <tileset firstgid="1" name="final_patterns" tilewidth="16" tileheight="16" tilecount="100">
   <image source="minimalist_tileset.png" width="160" height="160"/>
  </tileset>
@@ -1701,17 +1701,17 @@
     <property name="normalList" value=""/>
    </properties>
   </object>
-  <object id="684" name="71" type="object" x="447.333" y="510.284" width="15.6667" height="15.9091">
+  <object id="684" name="71" type="object" x="447.333" y="502.284" width="15.6667" height="15.9091">
    <properties>
     <property name="jumpList" value="32,102"/>
     <property name="landingList" value="69,72,74"/>
     <property name="normalList" value=""/>
    </properties>
   </object>
-  <object id="685" name="72" type="object" x="465.333" y="526.284" width="47" height="15.9091">
+  <object id="685" name="72" type="object" x="469" y="526.284" width="43.333" height="15.9091">
    <properties>
     <property name="jumpList" value="71,102"/>
-    <property name="landingList" value="74,77"/>
+    <property name="landingList" value="77"/>
     <property name="normalList" value=""/>
    </properties>
   </object>
