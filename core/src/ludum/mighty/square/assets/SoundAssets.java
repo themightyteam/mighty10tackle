@@ -34,6 +34,7 @@ public class SoundAssets
 	Sound randomChideSound10;
 	Sound randomChideSound11;
 	Sound randomChideSound12;
+	Sound randomChideSound13;
 	Sound victorySound;
 	Sound loseSound;
 
@@ -69,6 +70,7 @@ public class SoundAssets
 		this.randomChideSound10 = Gdx.audio.newSound(Gdx.files.internal("sound/three_headed_2.wav"));
 		this.randomChideSound11 = Gdx.audio.newSound(Gdx.files.internal("sound/more_squares.wav"));
 		this.randomChideSound12 = Gdx.audio.newSound(Gdx.files.internal("sound/run_square.wav"));
+		this.randomChideSound13 = Gdx.audio.newSound(Gdx.files.internal("sound/too_mighty.wav"));
 
 
 
@@ -126,7 +128,7 @@ public class SoundAssets
 
 	public void playChideSound()
 	{
-		int nextSound = this.generator.nextInt(13);
+		int nextSound = this.generator.nextInt(14);
 
 		if (nextSound == 0)
 			this.randomChideSound0.play();
@@ -154,6 +156,8 @@ public class SoundAssets
 			this.randomChideSound11.play();
 		else if (nextSound == 12)
 			this.randomChideSound12.play();
+		else if (nextSound == 13)
+			this.randomChideSound13.play();
 		else
 			this.randomChideSound0.play();
 	}
@@ -198,6 +202,7 @@ public class SoundAssets
 		this.randomChideSound10.dispose();
 		this.randomChideSound11.dispose();
 		this.randomChideSound12.dispose();
+		this.randomChideSound13.dispose();
 		this.victorySound.dispose();
 
 		this.loseSound.dispose();
