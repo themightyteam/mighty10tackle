@@ -7,37 +7,33 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import ludum.mighty.square.settings.CommonSettings;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class VictoryScreen extends DefaultScreen implements Screen {
 
 	SpriteBatch batch;
 	Texture img;
+	Sprite spr;
 	OrthographicCamera cam;
+	StretchViewport sv;
 
 	int waitFramesForHandle = 100;
-	private int tw;
-	private int th;
-	private int w;
-	private int h;
 
 	public VictoryScreen(Game game) {
 		super(game);
 
-		this.w = Gdx.graphics.getWidth();
-		this.h = Gdx.graphics.getHeight();
 		this.cam = new OrthographicCamera();
-		this.cam.setToOrtho(false, 2f, 2f * w / h);
-		this.cam.position.set(w / 2f, h / 2f, 0);
-		this.cam.zoom = 1.7f;
-		this.cam.update();
+		this.sv = new StretchViewport(100, 100, this.cam);
+		this.sv.apply();
+		this.cam.position.set(50, 50, 0);
 
 		this.batch = new SpriteBatch();
 		this.img = new Texture("theme/mighty10tackle_win.png");
-		this.tw = this.img.getDepth();
-		this.th = this.img.getHeight();
+		this.spr = new Sprite(this.img);
+		this.spr.setPosition(0, 0);
+		this.spr.setSize(100, 100);
 	}
 
 	public void render(float delta) {
@@ -48,22 +44,17 @@ public class VictoryScreen extends DefaultScreen implements Screen {
 		if (this.waitFramesForHandle <= 0)
 			handleInput();
 
-		this.w = Gdx.graphics.getWidth();
-		this.h = Gdx.graphics.getHeight();
-		this.cam.position.set(w / 2f, h / 2f, 0);
-		this.cam.update();
 		batch.setProjectionMatrix(this.cam.combined);
 
 		this.batch.begin();
-		batch.draw(this.img, 0, this.cam.position.y - (th / 2));
+		this.spr.draw(batch);
 		this.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		cam.viewportWidth = CommonSettings.CAMERA_WIDTH * 8;
-		cam.viewportHeight = CommonSettings.CAMERA_HEIGHT * 8;
-		cam.update();
+		this.sv.update(width, height);
+		this.cam.position.set(this.cam.viewportWidth / 2, this.cam.viewportHeight / 2, 0);
 	}
 
 	private void handleInput() {
