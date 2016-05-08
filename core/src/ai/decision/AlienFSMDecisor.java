@@ -10,7 +10,7 @@ import ai.world.AIWorld;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class AlienDecisor extends BasicDecisor 
+public class AlienFSMDecisor extends BasicDecisor 
 {
 	//No team has the flag
 	public static int STATE_STATUS_QUO = 0;
@@ -24,40 +24,81 @@ public class AlienDecisor extends BasicDecisor
 	//Both teams have the flag
 	public static int TOTAL_MAYHEM = 3;
 
-	
+
 	public static final double SHOOTING_RANGE = 5;
+
+	/////////////////////////////
+	//    State variables
+	//    FIXME: Move to a new class
+	//
+	///////////////////////////
 	
-	
+	//Current State
 	int currentState;
-
-
-	int lastNodeSeen = -1;
+	
+	//Time in which the player reached the node
 	long firstTimeInNode = 0;
+	
+	//Closest Enemy instance
 	NormalPlayer closestEnemy = null;
+	
+	//Closest Teammate instance
 	NormalPlayer closestTeammate = null;
+	
+	//Closest Teammate with flag
 	NormalPlayer teamMateWithFlag = null;
+	
+	//Closest enemy with flag
 	NormalPlayer enemyWithFlag = null;
+	
+	//My base position
 	Vector2 myBase = null;
+	
+	//Enemy Base position
 	Vector2 otherBase = null;
 
+	//True if enemy team has the flag
 	boolean enemyTeamHasFlag = false;
+	
+	//True if my team has the flag
 	boolean myTeamHasFlag = false;
+	
+	//True if i have the flag
 	boolean iHaveTheFlag = false;
 
-	//New state transition
+	//New state transition (change in state during tick execution)
 	boolean stateTransition = false;
 
-	public AlienDecisor( )
+	public AlienFSMDecisor( )
 	{
+		
+		//Sets initial state 
 		this.currentState = STATE_STATUS_QUO;
 	}
 
 
+
+	/**
+	 * 
+	 * Obtains the target node over which pathfinding will be calculated
+	 * 
+	 * Parameters:
+	 * 
+	 * @param aiWorld : representation of the world (graph nodes)
+	 * @param aiPlayer: current alien player
+	 * 
+	 * @return the node in the world graph of nodes with the target
+	 * (if no change in state occurred and there was a current pathfinding in use
+	 * the target node would be the same)
+	 * 
+	 * 
+	 */
 	@Override
 	public int getTransition(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
 		if (aiPlayer.getSquareTeam() == Player.GREEN_TEAM)
 		{
+			//Obtains the state/Update state variables
 			this.obtainState(aiPlayer.getGreenTeamList(), 
 					aiPlayer.getVioletTeamList(), aiPlayer);
 
@@ -65,79 +106,105 @@ public class AlienDecisor extends BasicDecisor
 		}
 		else
 		{
+			//Obtains the state/Updates state variables
 			this.obtainState(aiPlayer.getVioletTeamList(), 
 					aiPlayer.getGreenTeamList(), aiPlayer);
 
 
 		}
-		
 
-
+		//Check if there was a change in state (someone captured/freed the flag
 		this.checkChangeInState();
 
+		//Obtain the next target node
 		return this.obtainNextTarget(aiWorld, aiPlayer);
 	}
 
+	/**
+	 * 
+	 * Obtains next target node if function of the current state 
+	 * 
+	 * @param aiWorld : current world state 
+	 * @param aiPlayer : current player
+	 * @return next node in state
+	 */
 	private int obtainNextTarget(AIWorld aiWorld, AINormalPlayer aiPlayer)
 	{
 
 		int nextState = -1;
 
-		//If i have the flag, return always to base
+		//If i have the flag, return always to base (the node where the base is located)
 		if (this.iHaveTheFlag)
 			return this.obtainMyBaseSquare(aiWorld);
 
-		if (this.currentState ==  AlienDecisor.STATE_STATUS_QUO)
+		if (this.currentState ==  AlienFSMDecisor.STATE_STATUS_QUO)
 		{
-			if ((aiPlayer.getCurrentPath() != null) && 
-					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
-			{
-				if (!this.stateTransition)
-					return -1;
+
+
+			if (aiPlayer.getCurrentPath() != null)
+			{ 
+				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				{
+					//Changing of state only if i have no path and 
+					// 	no state transition had happened
+					if (!this.stateTransition)
+						return -1;
+				}
 			}
 
 			nextState = new StatePropStatusQuo().getNextState();
 
-		} else if (this.currentState ==  AlienDecisor.ONLY_ENEMY_ATTACK)
+		} else if (this.currentState ==  AlienFSMDecisor.ONLY_ENEMY_ATTACK)
 		{
-			if ((aiPlayer.getCurrentPath() != null) && 
-					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
-			{
-				if (!this.stateTransition)
-					return -1;
+
+			if (aiPlayer.getCurrentPath() != null)
+			{ 
+				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				{
+					if (!this.stateTransition)
+						return -1;
+				}
 			}
 
 			nextState = new StatePropOnlyEnemyAttack().getNextState();
 		}
-		else if (this.currentState ==  AlienDecisor.ONLY_WE_ATTACK)
+		else if (this.currentState ==  AlienFSMDecisor.ONLY_WE_ATTACK)
 		{
-			if ((aiPlayer.getCurrentPath() != null) && 
-					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
-			{
-				if (!this.stateTransition)
-					return -1;
+			if (aiPlayer.getCurrentPath() != null)
+			{ 
+				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				{
+					if (!this.stateTransition)
+						return -1;
+				}
 			}
 
 			nextState = new StatePropOnlyWeAttack().getNextState();
 		}
 		else 
 		{
-			if ((aiPlayer.getCurrentPath() != null) && 
-					(!aiPlayer.getCurrentPath().getPredConn().isEmpty()))
-			{
-				if (!this.stateTransition)
-					return -1;
+			if (aiPlayer.getCurrentPath() != null)
+			{ 
+
+				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				{
+
+					if (!this.stateTransition)
+						return -1;
+				}
 			}
 
 			nextState = new StatePropTotalMayhem().getNextState();
 		}
 
+
+		//Obtain the target node in function of the nextState
 		if (nextState == StateProp.GOTOOTHERBASE)
 		{
 			/*System.out.println("TEAM "+ aiPlayer.getSquareTeam() + " " +
 		this.obtainOtherBaseSquare(aiWorld));
 			 */
-			
+
 			return this.obtainOtherBaseSquare(aiWorld);
 		}
 
@@ -155,7 +222,7 @@ public class AlienDecisor extends BasicDecisor
 
 		else if (nextState == StateProp.GOTOCLOSESTENEMYWITHFLAG)
 		{
-//			System.out.println("CHASE WHO "+this.enemyWithFlag.getLastSeenNode());
+			//			System.out.println("CHASE WHO "+this.enemyWithFlag.getLastSeenNode());
 
 			return this.obtainClosestEnemyWithFlagSquare();
 		}
@@ -174,27 +241,38 @@ public class AlienDecisor extends BasicDecisor
 
 	}
 
-
-
+	/**
+	 * Obtains the base node id in the path of nodes
+	 * 
+	 * @param aiWorld : current world state
+	 * @return the id of the enemy base node
+	 */
 	public int obtainOtherBaseSquare(AIWorld aiWorld)
 	{
 		if (this.otherBase != null)
 		{
 			int baseNode = aiWorld.obtainCurrentNode(this.otherBase).getIdNode();
-			
+
 			return baseNode;
 		}
 
 		return -1;
 	}
 
-
+	/**
+	 * 
+	 * Obtains the node of the players base
+	 * 
+	 * @param aiWorld current world state
+	 * @return the node id of the player base or -1 if no base was
+	 * 	specified
+	 */
 	public int obtainMyBaseSquare(AIWorld aiWorld)
 	{
 		if (this.myBase != null)
 		{
 			//System.out.println("My Base "+ this.myBase.x+ " "+ this.myBase.y );
-			
+
 			int baseNode = aiWorld.obtainCurrentNode(this.myBase).getIdNode();
 
 			return baseNode;
@@ -286,7 +364,14 @@ public class AlienDecisor extends BasicDecisor
 	}
 
 
-
+	/**
+	 * 
+	 * Update the state of the player
+	 * 
+	 * @param myTeamList : teammate list
+	 * @param enemyTeamList : enemy list
+	 * @param aiPlayer : current player
+	 */
 	private void obtainState(List<Player> myTeamList, 
 			List<Player> enemyTeamList, AINormalPlayer aiPlayer)
 	{
@@ -365,7 +450,7 @@ public class AlienDecisor extends BasicDecisor
 					if (this.enemyWithFlag == null)
 					{
 						this.enemyWithFlag = player;
-						
+
 						//System.out.println(this.enemyWithFlag.getLastSeenNode().getIdNode());
 					}
 					else
@@ -397,35 +482,41 @@ public class AlienDecisor extends BasicDecisor
 		}	
 	}
 
-
+	/**
+	 * 
+	 * Changes the macro state (FSM State)
+	 * 
+	 * It flags if the transition of state occurred during this tick
+	 * 
+	 */
 	private void checkChangeInState() 
 	{
 
 		this.stateTransition = false;
 		if ((!this.enemyTeamHasFlag) && (!this.myTeamHasFlag))
 		{
-			if (this.currentState != AlienDecisor.STATE_STATUS_QUO)
+			if (this.currentState != AlienFSMDecisor.STATE_STATUS_QUO)
 				this.stateTransition = true;
-			this.currentState = AlienDecisor.STATE_STATUS_QUO;
+			this.currentState = AlienFSMDecisor.STATE_STATUS_QUO;
 		}
 		else if (this.enemyTeamHasFlag && !this.myTeamHasFlag)
 		{
-			if (this.currentState != AlienDecisor.ONLY_ENEMY_ATTACK)	
+			if (this.currentState != AlienFSMDecisor.ONLY_ENEMY_ATTACK)	
 				this.stateTransition = true;
-			this.currentState = AlienDecisor.ONLY_ENEMY_ATTACK;
+			this.currentState = AlienFSMDecisor.ONLY_ENEMY_ATTACK;
 
 		}
 		else if (!this.enemyTeamHasFlag && this.myTeamHasFlag)
 		{
-			if (this.currentState != AlienDecisor.ONLY_WE_ATTACK)
+			if (this.currentState != AlienFSMDecisor.ONLY_WE_ATTACK)
 				this.stateTransition = true;
-			this.currentState = AlienDecisor.ONLY_WE_ATTACK;
+			this.currentState = AlienFSMDecisor.ONLY_WE_ATTACK;
 		}
 		else if (this.enemyTeamHasFlag && this.myTeamHasFlag)
 		{
-			if (this.currentState != AlienDecisor.TOTAL_MAYHEM)
+			if (this.currentState != AlienFSMDecisor.TOTAL_MAYHEM)
 				this.stateTransition = true;
-			this.currentState = AlienDecisor.TOTAL_MAYHEM;
+			this.currentState = AlienFSMDecisor.TOTAL_MAYHEM;
 		}
 
 
@@ -449,7 +540,7 @@ public class AlienDecisor extends BasicDecisor
 		return 0.5 * Math.pow(one.x - other.x, 2 ) + Math.pow(other.y - other.y, 2);
 	}
 
-	
+
 	public boolean shouldIshoot(AINormalPlayer aiPlayer)
 	{
 		if ((this.closestEnemy != null) && (aiPlayer.getPosition() != null))
@@ -457,18 +548,18 @@ public class AlienDecisor extends BasicDecisor
 			if (this.closestEnemy.getPosition() != null)
 			{
 				if (Math.abs(aiPlayer.getPosition().x - 
-						closestEnemy.getPosition().x) < AlienDecisor.SHOOTING_RANGE)
+						closestEnemy.getPosition().x) < AlienFSMDecisor.SHOOTING_RANGE)
 				{
 					return true;
 				}
 			}
-			
+
 		}
-		
-		
+
+
 		return false;
 	}
-	
+
 
 	public Vector2 getMyBase() {
 		return myBase;

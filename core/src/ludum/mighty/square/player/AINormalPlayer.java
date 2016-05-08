@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.world.MightyWorld;
-import ai.decision.AlienDecisor;
+import ai.decision.AlienFSMDecisor;
 import ai.movement.steering.BasicSteering;
 import ai.pathfinding.AStar;
 import ai.pathfinding.commons.Connection2D;
@@ -22,8 +22,7 @@ public class AINormalPlayer extends NormalPlayer
 {
 
 
-
-	AlienDecisor decisor = new AlienDecisor();
+	AlienFSMDecisor decisor = new AlienFSMDecisor();
 	BasicSteering steering = new BasicSteering();
 
 	AStar pathFinder;
@@ -60,9 +59,7 @@ public class AINormalPlayer extends NormalPlayer
 				new EuclideanDistanceHeuristic( this.aiWorld.getNodeList());
 
 
-		this.obtainPath();
 
-		this.deleteNodesFromTarget();
 
 		if (this.squareTeam ==  Player.GREEN_TEAM)
 		{
@@ -91,11 +88,22 @@ public class AINormalPlayer extends NormalPlayer
 		
 
 		}
+		
+		//Obtain Path
+		this.obtainPath();
+
+		
+		this.deleteNodesFromTarget();
 	}
 
 
+	/**
+	 * 
+	 */
 	private void obtainPath()
 	{
+		
+		//Obtains the new state 
 		int newTransition = this.decisor.getTransition(this.aiWorld, this);
 
 		if ((newTransition != -1) && this.lastSeenNode != null )
@@ -109,12 +117,24 @@ public class AINormalPlayer extends NormalPlayer
 				this.currentTarget = new Vector2(
 						(float) this.aiWorld.getNodeList().get(this.currentPath.getPredConn().get(0).getSinkNodeId()).getX(),
 						(float) this.aiWorld.getNodeList().get(this.currentPath.getPredConn().get(0).getSinkNodeId()).getY());
-
+				//Update the jumping flag (true if the alien 
 				this.targetIsJump = ((Connection2D) this.currentPath.getPredConn().get(0)).isJump();
 			}
 		}
 	}
 
+	
+	/**
+	 * 
+	 * Checks if the next node of the target is reached
+	 * 
+	 * If it is so, it removes the node from the path list of the nodes to reach
+	 * the target
+	 * 
+	 * If a different node than the expected was reached it clears the path 
+	 * 	(it will be recalculated in obtainPath function )
+	 * 
+	 */
 	private void deleteNodesFromTarget()
 	{
 
@@ -158,6 +178,15 @@ public class AINormalPlayer extends NormalPlayer
 
 	}
 
+	
+	/**
+	 * 
+	 * Clears the path if the player was stuck in a node too much time.
+	 * 
+	 * It resets the kick timer if the player reaches a new node
+	 * 
+	 * 
+	 */
 	public void checkForKick()
 	{
 		if (this.lastSeenNode != null)
@@ -196,6 +225,7 @@ public class AINormalPlayer extends NormalPlayer
 		
 		this.obtainPath();
 
+		//Deletes nodes if a new node was reached
 		this.deleteNodesFromTarget();
 
 		/*//Uncomment for debug
