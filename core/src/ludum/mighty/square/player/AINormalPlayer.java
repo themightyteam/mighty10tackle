@@ -35,6 +35,8 @@ public class AINormalPlayer extends NormalPlayer
 
 	EstimatedCostHeuristic heuristic;
 
+
+	
 	public static final double BIG_JUMP = 2;
 	public static final double CLOSE_BUT_HIGH = 0.02;
 	public static final long TIME_FOR_KICK = 3000;
@@ -171,6 +173,11 @@ public class AINormalPlayer extends NormalPlayer
 								(float) this.aiWorld.getNodeList().get(this.currentPath.getPredConn().get(0).getSinkNodeId()).getY());
 
 						this.targetIsJump = ((Connection2D) this.currentPath.getPredConn().get(0)).isJump();
+					}
+					else
+					{
+						//Goal was reached
+						this.decisor.setGoalReached(true);
 					}
 				}
 			}
@@ -317,8 +324,10 @@ public class AINormalPlayer extends NormalPlayer
 		}
 		else 
 		{
-			//Avoid floating objects
-			this.currentTarget = this.position;
+			//Closest Enemy by default
+			
+			this.currentTarget = this.decisor.getClosestEnemy().getPosition();
+			this.targetIsJump = true;
 		}
 	}
 

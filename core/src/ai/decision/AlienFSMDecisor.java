@@ -32,7 +32,7 @@ public class AlienFSMDecisor extends BasicDecisor
 	
 	
 	//Timeout of random vars in decisor tree
-	public static final int DECISOR_TICK_TIMEOUT = 500;
+	public static final int DECISOR_TICK_TIMEOUT = 100;
 
 	/////////////////////////////
 	//    State variables
@@ -75,7 +75,9 @@ public class AlienFSMDecisor extends BasicDecisor
 
 	//New state transition (change in state during tick execution)
 	boolean stateTransition = false;
-	
+
+	//Flag that activates when a node goal was reached
+	boolean goalReached = false;
 	
 	//Stores the number of decision iterations (number of executions of the decisor tree)
 	int decisionIt = 0;
@@ -144,9 +146,8 @@ public class AlienFSMDecisor extends BasicDecisor
 		else
 		{
 			//Obtains the state/Updates state variables
-			this.obtainState(aiPlayer.getVioletTeamList(), 
-					aiPlayer.getGreenTeamList(), aiPlayer);
-
+			this.obtainState(this.aiPlayer.getVioletTeamList(), 
+					this.aiPlayer.getGreenTeamList(), this.aiPlayer);
 
 		}
 
@@ -166,7 +167,7 @@ public class AlienFSMDecisor extends BasicDecisor
 	private int obtainNextTarget()
 	{
 
-		int nextState = -1;
+	
 
 		//If i have the flag, return always to base (the node where the base is located)
 		if (this.iHaveTheFlag)
@@ -193,6 +194,13 @@ public class AlienFSMDecisor extends BasicDecisor
 		
 		//Add one tick
 		this.decisionIt++;
+		
+		//Reset ticks if goal was reached
+		if (this.goalReached)
+		{
+			this.decisionIt = 0;
+			this.goalReached = false;
+		}
 		
 		if (resultNode instanceof ActionFSMNode)
 		{
@@ -559,6 +567,30 @@ public class AlienFSMDecisor extends BasicDecisor
 
 	public void setiHaveTheFlag(boolean iHaveTheFlag) {
 		this.iHaveTheFlag = iHaveTheFlag;
+	}
+
+
+
+	public boolean isGoalReached() {
+		return goalReached;
+	}
+
+
+
+	public void setGoalReached(boolean goalReached) {
+		this.goalReached = goalReached;
+	}
+
+
+
+	public NormalPlayer getClosestEnemy() {
+		return closestEnemy;
+	}
+
+
+
+	public void setClosestEnemy(NormalPlayer closestEnemy) {
+		this.closestEnemy = closestEnemy;
 	}
 
 

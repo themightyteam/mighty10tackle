@@ -13,7 +13,7 @@ public class ActionGoToRandomSquare extends RandomActionNode {
 
 	@Override
 	public int obtainNextNode() {
-	
+			
 		this.nextNode = this.alienFSM.obtainRandomSquare();
 		
 		return this.nextNode;
