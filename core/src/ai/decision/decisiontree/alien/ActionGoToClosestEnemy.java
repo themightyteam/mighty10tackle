@@ -3,9 +3,8 @@ package ai.decision.decisiontree.alien;
 import ai.decision.AlienFSMDecisor;
 import ai.decision.decisiontree.DecisionTreeNode;
 
-public class ActionGoToClosestEnemy  extends DecisionTreeFSMNode {
+public class ActionGoToClosestEnemy  extends ActionFSMNode {
 
-	int nextNode;
 	
 	public ActionGoToClosestEnemy(AlienFSMDecisor alienFSM) {
 		super(alienFSM);

@@ -4,17 +4,15 @@ import ai.decision.AlienFSMDecisor;
 import ai.decision.StateProp;
 import ai.decision.decisiontree.DecisionTreeNode;
 
-public class TreeNoFlag 
+public class TreeNoFlag extends TreeFlag
 {
-	
-	DecisionTreeNode rootNode;
-	
+
 	
 	public TreeNoFlag(StateProp prop,AlienFSMDecisor alienFSM,
 			int timeOut)
 	{
 	
-		
+		super(prop, alienFSM, timeOut);
 		
 
 		

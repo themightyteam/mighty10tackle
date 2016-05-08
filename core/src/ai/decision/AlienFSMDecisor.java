@@ -6,7 +6,10 @@ import ludum.mighty.square.player.AINormalPlayer;
 import ludum.mighty.square.player.NormalPlayer;
 import ludum.mighty.square.player.Player;
 import ludum.mighty.square.world.pathnodes.PathNode;
-import ai.world.AIWorld;
+import ai.decision.decisiontree.DecisionTreeNode;
+import ai.decision.decisiontree.alien.ActionFSMNode;
+import ai.decision.decisiontree.alien.TreeFlag;
+import ai.decision.decisiontree.alien.TreeNoFlag;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -26,6 +29,10 @@ public class AlienFSMDecisor extends BasicDecisor
 
 
 	public static final double SHOOTING_RANGE = 5;
+	
+	
+	//Timeout of random vars in decisor tree
+	public static final int DECISOR_TICK_TIMEOUT = 500;
 
 	/////////////////////////////
 	//    State variables
@@ -73,12 +80,37 @@ public class AlienFSMDecisor extends BasicDecisor
 	//Stores the number of decision iterations (number of executions of the decisor tree)
 	int decisionIt = 0;
 
+	//Set of decisors (one for state)
+	TreeFlag decisorStatusQuo;
+	TreeFlag decisorOnlyWeAttack;
+	TreeFlag decisorOnlyEnemyAttack;
+	TreeFlag decisorTotalMayhem;
+	
+	
 	public AlienFSMDecisor(AINormalPlayer aiNormalPlayer )
 	{
 		super(aiNormalPlayer);
 		
 		//Sets initial state 
 		this.currentState = STATE_STATUS_QUO;
+		
+		//Init the decisors
+		this.decisorStatusQuo = new TreeNoFlag(new StatePropStatusQuo(),
+				this,
+				DECISOR_TICK_TIMEOUT);
+	
+		this.decisorOnlyWeAttack = new TreeFlag(new StatePropOnlyWeAttack(),
+				this,
+				DECISOR_TICK_TIMEOUT);
+		
+		this.decisorOnlyEnemyAttack = new TreeNoFlag(new StatePropOnlyEnemyAttack(),
+				this,
+				DECISOR_TICK_TIMEOUT);
+
+		this.decisorTotalMayhem = new TreeNoFlag(new StatePropTotalMayhem(),
+				this,
+				DECISOR_TICK_TIMEOUT);
+		
 	}
 
 
@@ -129,8 +161,6 @@ public class AlienFSMDecisor extends BasicDecisor
 	 * 
 	 * Obtains next target node if function of the current state 
 	 * 
-	 * @param aiWorld : current world state 
-	 * @param aiPlayer : current player
 	 * @return next node in state
 	 */
 	private int obtainNextTarget()
@@ -142,107 +172,35 @@ public class AlienFSMDecisor extends BasicDecisor
 		if (this.iHaveTheFlag)
 			return this.obtainMyBaseSquare();
 
+		DecisionTreeNode resultNode;
 		if (this.currentState ==  AlienFSMDecisor.STATE_STATUS_QUO)
 		{
-
-
-			if (this.aiPlayer.getCurrentPath() != null)
-			{ 
-				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
-				{
-					//Changing of state only if i have no path and 
-					// 	no state transition had happened
-					if (!this.stateTransition)
-						return -1;
-				}
-			}
-
-			nextState = new StatePropStatusQuo().getNextState();
+			resultNode = this.decisorStatusQuo.getRootNode().makeDecision();
 
 		} else if (this.currentState ==  AlienFSMDecisor.ONLY_ENEMY_ATTACK)
 		{
-
-			if (this.aiPlayer.getCurrentPath() != null)
-			{ 
-				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
-				{
-					if (!this.stateTransition)
-						return -1;
-				}
-			}
-
-			nextState = new StatePropOnlyEnemyAttack().getNextState();
+			resultNode = this.decisorOnlyEnemyAttack.getRootNode().makeDecision();
 		}
 		else if (this.currentState ==  AlienFSMDecisor.ONLY_WE_ATTACK)
 		{
-			if (this.aiPlayer.getCurrentPath() != null)
-			{ 
-				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
-				{
-					if (!this.stateTransition)
-						return -1;
-				}
-			}
-
-			nextState = new StatePropOnlyWeAttack().getNextState();
+			resultNode = this.decisorOnlyWeAttack.getRootNode().makeDecision();
 		}
 		else 
 		{
-			if (this.aiPlayer.getCurrentPath() != null)
-			{ 
-
-				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
-				{
-
-					if (!this.stateTransition)
-						return -1;
-				}
-			}
-
-			nextState = new StatePropTotalMayhem().getNextState();
+			resultNode = this.decisorTotalMayhem.getRootNode().makeDecision();
 		}
-
-
-		//Obtain the target node in function of the nextState
-		if (nextState == StateProp.GOTOOTHERBASE)
+		
+		
+		//Add one tick
+		this.decisionIt++;
+		
+		if (resultNode instanceof ActionFSMNode)
 		{
-			/*System.out.println("TEAM "+ aiPlayer.getSquareTeam() + " " +
-		this.obtainOtherBaseSquare(aiWorld));
-			 */
-
-			return this.obtainOtherBaseSquare();
+			ActionFSMNode resultAction = (ActionFSMNode) resultNode;
+			
+			return resultAction.getNextNode();
 		}
-
-		else if (nextState == StateProp.GOTOMYBASE)
-			return this.obtainMyBaseSquare();
-
-		else if( nextState == StateProp.GOTORANDOMSQUAREZONE)
-			return this.obtainRandomSquareInMyZone();
-
-		else if (nextState == StateProp.GOTORANDOMSQUARE)
-			return this.obtainRandomSquare();
-
-		else if (nextState == StateProp.GOTOCLOSESTENEMY)
-			return this.obtainClosestEnemySquare();
-
-		else if (nextState == StateProp.GOTOCLOSESTENEMYWITHFLAG)
-		{
-			//			System.out.println("CHASE WHO "+this.enemyWithFlag.getLastSeenNode());
-
-			return this.obtainClosestEnemyWithFlagSquare();
-		}
-		else if (nextState == StateProp.GOTOCLOSESTTEAMMATE)
-			return this.obtainClosestTeamMateSquare();
-
-		else if (nextState == StateProp.GOTOCLOSESTTEAMMATEWITHFLAG)
-		{
-
-			return this.obtainClosestTeamMateWithFlagSquare();
-		}
-		else
-		{
-			return this.obtainRandomSquare();
-		}
+		else return -1;
 
 	}
 

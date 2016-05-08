@@ -3,10 +3,8 @@ package ai.decision.decisiontree.alien;
 import ai.decision.AlienFSMDecisor;
 import ai.decision.decisiontree.DecisionTreeNode;
 
-public class ActionGoToMyBase extends DecisionTreeFSMNode
+public class ActionGoToMyBase extends ActionFSMNode
 {
-
-	int nextNode;
 	
 	public ActionGoToMyBase(AlienFSMDecisor alienFSM) {
 		super(alienFSM);

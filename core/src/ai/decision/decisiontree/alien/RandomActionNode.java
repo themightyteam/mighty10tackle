@@ -5,13 +5,12 @@ import java.util.Random;
 import ai.decision.AlienFSMDecisor;
 import ai.decision.decisiontree.DecisionTreeNode;
 
-public abstract class RandomActionNode extends DecisionTreeFSMNode {
+public abstract class RandomActionNode extends ActionFSMNode {
 
 
 	
 	Random generator;
 	
-	int nextNode = -1;
 	
 	//Previous iteration of the decision tree algorithm 
 	//(an internal counter - it should be provided in the internal knowledge of the player)

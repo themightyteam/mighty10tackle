@@ -76,4 +76,18 @@ public class TreeFlag
 
 
 	}
+
+
+	public DecisionTreeNode getRootNode() {
+		return rootNode;
+	}
+
+
+	public void setRootNode(DecisionTreeNode rootNode) {
+		this.rootNode = rootNode;
+	}
+	
+	
+	
 }
+

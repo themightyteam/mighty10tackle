@@ -3,9 +3,7 @@ package ai.decision.decisiontree.alien;
 import ai.decision.AlienFSMDecisor;
 import ai.decision.decisiontree.DecisionTreeNode;
 
-public class ActionGoToClosestTeammateWithFlag  extends DecisionTreeFSMNode {
-
-	int nextNode;
+public class ActionGoToClosestTeammateWithFlag  extends ActionFSMNode {
 	
 	public ActionGoToClosestTeammateWithFlag(AlienFSMDecisor alienFSM) {
 		super(alienFSM);

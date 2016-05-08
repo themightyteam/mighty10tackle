@@ -3,10 +3,9 @@ package ai.decision.decisiontree.alien;
 import ai.decision.AlienFSMDecisor;
 import ai.decision.decisiontree.DecisionTreeNode;
 
-public class ActionGoToOtherBase extends DecisionTreeFSMNode {
+public class ActionGoToOtherBase extends ActionFSMNode {
 
 
-	int nextNode;
 	
 	public ActionGoToOtherBase(AlienFSMDecisor alienFSM) {
 		super(alienFSM);

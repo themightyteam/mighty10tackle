@@ -107,7 +107,7 @@ public class AINormalPlayer extends NormalPlayer
 	{
 		
 		//Obtains the new state 
-		int newTargetNode = this.decisor.getTransition(this.aiWorld, this);
+		int newTargetNode = this.decisor.getTransition();
 
 		if ((newTargetNode != -1) && this.lastSeenNode != null )
 		{
