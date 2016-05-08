@@ -61,4 +61,73 @@ public class StateProp
 		
 	}
 
+	
+	
+	//Getters and setters
+	public double getPropGoToOtherBase() {
+		return propGoToOtherBase;
+	}
+
+	public void setPropGoToOtherBase(double propGoToOtherBase) {
+		this.propGoToOtherBase = propGoToOtherBase;
+	}
+
+	public double getPropGoToMyBase() {
+		return propGoToMyBase;
+	}
+
+	public void setPropGoToMyBase(double propGoToMyBase) {
+		this.propGoToMyBase = propGoToMyBase;
+	}
+
+	public double getPropGoToRandomSquareInZone() {
+		return propGoToRandomSquareInZone;
+	}
+
+	public void setPropGoToRandomSquareInZone(double propGoToRandomSquareInZone) {
+		this.propGoToRandomSquareInZone = propGoToRandomSquareInZone;
+	}
+
+	public double getPropGoToRandomSquare() {
+		return propGoToRandomSquare;
+	}
+
+	public void setPropGoToRandomSquare(double propGoToRandomSquare) {
+		this.propGoToRandomSquare = propGoToRandomSquare;
+	}
+
+	public double getPropGoToClosestEnemy() {
+		return propGoToClosestEnemy;
+	}
+
+	public void setPropGoToClosestEnemy(double propGoToClosestEnemy) {
+		this.propGoToClosestEnemy = propGoToClosestEnemy;
+	}
+
+	public double getPropGoToClosestEnemyWithFlag() {
+		return propGoToClosestEnemyWithFlag;
+	}
+
+	public void setPropGoToClosestEnemyWithFlag(double propGoToClosestEnemyWithFlag) {
+		this.propGoToClosestEnemyWithFlag = propGoToClosestEnemyWithFlag;
+	}
+
+	public double getPropGoToClosestTeammate() {
+		return propGoToClosestTeammate;
+	}
+
+	public void setPropGoToClosestTeammate(double propGoToClosestTeammate) {
+		this.propGoToClosestTeammate = propGoToClosestTeammate;
+	}
+
+	public double getPropGoToClosestTeamMateWithFlag() {
+		return propGoToClosestTeamMateWithFlag;
+	}
+
+	public void setPropGoToClosestTeamMateWithFlag(
+			double propGoToClosestTeamMateWithFlag) {
+		this.propGoToClosestTeamMateWithFlag = propGoToClosestTeamMateWithFlag;
+	}
+
+
 }

@@ -68,9 +68,14 @@ public class AlienFSMDecisor extends BasicDecisor
 
 	//New state transition (change in state during tick execution)
 	boolean stateTransition = false;
+	
+	
+	//Stores the number of decision iterations (number of executions of the decisor tree)
+	int decisionIt = 0;
 
-	public AlienFSMDecisor( )
+	public AlienFSMDecisor(AINormalPlayer aiNormalPlayer )
 	{
+		super(aiNormalPlayer);
 		
 		//Sets initial state 
 		this.currentState = STATE_STATUS_QUO;
@@ -94,13 +99,13 @@ public class AlienFSMDecisor extends BasicDecisor
 	 * 
 	 */
 	@Override
-	public int getTransition(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	public int getTransition()
 	{
-		if (aiPlayer.getSquareTeam() == Player.GREEN_TEAM)
+		if (this.aiPlayer.getSquareTeam() == Player.GREEN_TEAM)
 		{
 			//Obtains the state/Update state variables
-			this.obtainState(aiPlayer.getGreenTeamList(), 
-					aiPlayer.getVioletTeamList(), aiPlayer);
+			this.obtainState(this.aiPlayer.getGreenTeamList(), 
+					this.aiPlayer.getVioletTeamList(), this.aiPlayer);
 
 
 		}
@@ -117,7 +122,7 @@ public class AlienFSMDecisor extends BasicDecisor
 		this.checkChangeInState();
 
 		//Obtain the next target node
-		return this.obtainNextTarget(aiWorld, aiPlayer);
+		return this.obtainNextTarget();
 	}
 
 	/**
@@ -128,22 +133,22 @@ public class AlienFSMDecisor extends BasicDecisor
 	 * @param aiPlayer : current player
 	 * @return next node in state
 	 */
-	private int obtainNextTarget(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	private int obtainNextTarget()
 	{
 
 		int nextState = -1;
 
 		//If i have the flag, return always to base (the node where the base is located)
 		if (this.iHaveTheFlag)
-			return this.obtainMyBaseSquare(aiWorld);
+			return this.obtainMyBaseSquare();
 
 		if (this.currentState ==  AlienFSMDecisor.STATE_STATUS_QUO)
 		{
 
 
-			if (aiPlayer.getCurrentPath() != null)
+			if (this.aiPlayer.getCurrentPath() != null)
 			{ 
-				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
 				{
 					//Changing of state only if i have no path and 
 					// 	no state transition had happened
@@ -157,9 +162,9 @@ public class AlienFSMDecisor extends BasicDecisor
 		} else if (this.currentState ==  AlienFSMDecisor.ONLY_ENEMY_ATTACK)
 		{
 
-			if (aiPlayer.getCurrentPath() != null)
+			if (this.aiPlayer.getCurrentPath() != null)
 			{ 
-				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
 				{
 					if (!this.stateTransition)
 						return -1;
@@ -170,9 +175,9 @@ public class AlienFSMDecisor extends BasicDecisor
 		}
 		else if (this.currentState ==  AlienFSMDecisor.ONLY_WE_ATTACK)
 		{
-			if (aiPlayer.getCurrentPath() != null)
+			if (this.aiPlayer.getCurrentPath() != null)
 			{ 
-				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
 				{
 					if (!this.stateTransition)
 						return -1;
@@ -183,10 +188,10 @@ public class AlienFSMDecisor extends BasicDecisor
 		}
 		else 
 		{
-			if (aiPlayer.getCurrentPath() != null)
+			if (this.aiPlayer.getCurrentPath() != null)
 			{ 
 
-				if (!aiPlayer.getCurrentPath().getPredConn().isEmpty())
+				if (!this.aiPlayer.getCurrentPath().getPredConn().isEmpty())
 				{
 
 					if (!this.stateTransition)
@@ -205,17 +210,17 @@ public class AlienFSMDecisor extends BasicDecisor
 		this.obtainOtherBaseSquare(aiWorld));
 			 */
 
-			return this.obtainOtherBaseSquare(aiWorld);
+			return this.obtainOtherBaseSquare();
 		}
 
 		else if (nextState == StateProp.GOTOMYBASE)
-			return this.obtainMyBaseSquare(aiWorld);
+			return this.obtainMyBaseSquare();
 
 		else if( nextState == StateProp.GOTORANDOMSQUAREZONE)
-			return this.obtainRandomSquareInMyZone(aiWorld, aiPlayer);
+			return this.obtainRandomSquareInMyZone();
 
 		else if (nextState == StateProp.GOTORANDOMSQUARE)
-			return this.obtainRandomSquare(aiWorld, aiPlayer);
+			return this.obtainRandomSquare();
 
 		else if (nextState == StateProp.GOTOCLOSESTENEMY)
 			return this.obtainClosestEnemySquare();
@@ -236,7 +241,7 @@ public class AlienFSMDecisor extends BasicDecisor
 		}
 		else
 		{
-			return this.obtainRandomSquare(aiWorld, aiPlayer);
+			return this.obtainRandomSquare();
 		}
 
 	}
@@ -244,14 +249,13 @@ public class AlienFSMDecisor extends BasicDecisor
 	/**
 	 * Obtains the base node id in the path of nodes
 	 * 
-	 * @param aiWorld : current world state
 	 * @return the id of the enemy base node
 	 */
-	public int obtainOtherBaseSquare(AIWorld aiWorld)
+	public int obtainOtherBaseSquare()
 	{
 		if (this.otherBase != null)
 		{
-			int baseNode = aiWorld.obtainCurrentNode(this.otherBase).getIdNode();
+			int baseNode = this.aiPlayer.getAiWorld().obtainCurrentNode(this.otherBase).getIdNode();
 
 			return baseNode;
 		}
@@ -263,17 +267,16 @@ public class AlienFSMDecisor extends BasicDecisor
 	 * 
 	 * Obtains the node of the players base
 	 * 
-	 * @param aiWorld current world state
 	 * @return the node id of the player base or -1 if no base was
 	 * 	specified
 	 */
-	public int obtainMyBaseSquare(AIWorld aiWorld)
+	public int obtainMyBaseSquare()
 	{
 		if (this.myBase != null)
 		{
 			//System.out.println("My Base "+ this.myBase.x+ " "+ this.myBase.y );
 
-			int baseNode = aiWorld.obtainCurrentNode(this.myBase).getIdNode();
+			int baseNode = this.aiPlayer.getAiWorld().obtainCurrentNode(this.myBase).getIdNode();
 
 			return baseNode;
 		}
@@ -281,16 +284,16 @@ public class AlienFSMDecisor extends BasicDecisor
 		return -1;
 	}
 
-	public int obtainRandomSquareInMyZone(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	public int obtainRandomSquareInMyZone()
 	{
-		if (aiPlayer.getPosition() != null)
+		if (this.aiPlayer.getPosition() != null)
 		{
-			int zone = aiWorld.obtainCurrentZone(aiPlayer.getPosition());
+			int zone = this.aiPlayer.getAiWorld().obtainCurrentZone(this.aiPlayer.getPosition());
 
 			if (zone > -1)
 			{
 				List<PathNode> pathsInZone = 
-						aiWorld.getZonePathMap().get(zone);
+						this.aiPlayer.getAiWorld().getZonePathMap().get(zone);
 
 				int randomPath =  (int) ( Math.floor(Math.random() * pathsInZone.size() ) );
 
@@ -301,13 +304,13 @@ public class AlienFSMDecisor extends BasicDecisor
 		return -1;
 	}
 
-	public int obtainRandomSquare(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	public int obtainRandomSquare()
 	{
-		if (aiPlayer.getPosition() != null)
+		if (this.aiPlayer.getPosition() != null)
 		{
-			int randomPath = (int) (Math.floor(Math.random() * aiWorld.getPathList().size()));
+			int randomPath = (int) (Math.floor(Math.random() * this.aiPlayer.getAiWorld().getPathList().size()));
 
-			return aiWorld.getPathList().get(randomPath).getIdNode();
+			return this.aiPlayer.getAiWorld().getPathList().get(randomPath).getIdNode();
 
 		}
 
@@ -578,6 +581,26 @@ public class AlienFSMDecisor extends BasicDecisor
 
 	public void setOtherBase(Vector2 otherBase) {
 		this.otherBase = otherBase;
+	}
+
+	public int getDecisionIt() {
+		return decisionIt;
+	}
+
+	public void setDecisionIt(int decisionIt) {
+		this.decisionIt = decisionIt;
+	}
+
+
+
+	public boolean isiHaveTheFlag() {
+		return iHaveTheFlag;
+	}
+
+
+
+	public void setiHaveTheFlag(boolean iHaveTheFlag) {
+		this.iHaveTheFlag = iHaveTheFlag;
 	}
 
 

@@ -347,6 +347,14 @@ public class NormalPlayer extends Player
 		this.world = world;
 	}
 
+	public AIWorld getAiWorld() {
+		return aiWorld;
+	}
+
+	public void setAiWorld(AIWorld aiWorld) {
+		this.aiWorld = aiWorld;
+	}
+
 	
 	
 }

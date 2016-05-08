@@ -22,7 +22,7 @@ public class AINormalPlayer extends NormalPlayer
 {
 
 
-	AlienFSMDecisor decisor = new AlienFSMDecisor();
+	AlienFSMDecisor decisor = new AlienFSMDecisor(this);
 	BasicSteering steering = new BasicSteering();
 
 	AStar pathFinder;
@@ -99,18 +99,21 @@ public class AINormalPlayer extends NormalPlayer
 
 	/**
 	 * 
+	 * Obtains the path of a new target if new target is specified
+	 * 	
+	 *   
 	 */
 	private void obtainPath()
 	{
 		
 		//Obtains the new state 
-		int newTransition = this.decisor.getTransition(this.aiWorld, this);
+		int newTargetNode = this.decisor.getTransition(this.aiWorld, this);
 
-		if ((newTransition != -1) && this.lastSeenNode != null )
+		if ((newTargetNode != -1) && this.lastSeenNode != null )
 		{
 			//Calculate the pathfinding
 			this.currentPath = this.pathFinder.pathfindAStar( new PathfindingGraph( this.aiWorld.getGraphMap()), 
-					this.lastSeenNode.getIdNode(), newTransition, heuristic);
+					this.lastSeenNode.getIdNode(), newTargetNode, heuristic);
 			if (!this.currentPath.getPredConn().isEmpty())
 				//Setting the target
 			{
@@ -138,14 +141,12 @@ public class AINormalPlayer extends NormalPlayer
 	private void deleteNodesFromTarget()
 	{
 
-
-
 		if ((this.currentPath != null) && this.lastSeenNode != null)
 
 			if (!this.currentPath.getPredConn().isEmpty())
 			{
 
-
+				//Unwanted behaviour (target or source nodes are not player current node)
 				if (this.currentPath.getPredConn().get(0).getSinkNodeId() != 
 						this.lastSeenNode.getIdNode())
 				{
@@ -322,6 +323,7 @@ public class AINormalPlayer extends NormalPlayer
 	}
 
 
+	//Getters and setters
 	public PredictedPath getCurrentPath() {
 		return currentPath;
 	}

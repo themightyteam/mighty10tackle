@@ -9,14 +9,21 @@ import com.badlogic.gdx.math.Vector2;
 public class BasicDecisor 
 {
 	
+	AINormalPlayer aiPlayer;
+	
+	public BasicDecisor(AINormalPlayer aiNormalPlayer)
+	{
+		this.aiPlayer = aiNormalPlayer;
+	}
 	
 
 	//Returns a random target if none available
-	private int obtainNextPathNode(AIWorld aiWorld)
+	private int obtainNextPathNode()
 	{
-		int nextNode = (int) Math.floor(Math.random() * aiWorld.getNodeList().size());
+		int nextNode = (int) Math.floor(Math.random() * this.aiPlayer.getAiWorld()
+				.getNodeList().size());
 		
-		if (aiWorld.getNodeList().containsKey(nextNode))
+		if (this.aiPlayer.getAiWorld().getNodeList().containsKey(nextNode))
 		{
 			return nextNode;
 			
@@ -26,19 +33,19 @@ public class BasicDecisor
 	}
 	
 	
-	public int getTransition(AIWorld aiWorld, AINormalPlayer aiPlayer)
+	public int getTransition()
 	{
-		PredictedPath predPath = aiPlayer.getCurrentPath();
+		PredictedPath predPath = this.aiPlayer.getCurrentPath();
 		
 		if (predPath == null)
 		{
-			return this.obtainNextPathNode(aiWorld);
+			return this.obtainNextPathNode();
 		}
 		else
 		{
 			if (predPath.getPredConn().isEmpty())
 			{
-				return this.obtainNextPathNode(aiWorld);
+				return this.obtainNextPathNode();
 			}
 		}
 		
