@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.audio.Sound;
 
 public class LoseScreen extends DefaultScreen implements Screen {
 
@@ -18,7 +19,8 @@ public class LoseScreen extends DefaultScreen implements Screen {
 	Sprite spr;
 	OrthographicCamera cam;
 	StretchViewport sv;
-
+	Sound loseSound;
+	
 	int waitFramesForHandle = 100;
 
 	public LoseScreen(Game game) {
@@ -34,6 +36,9 @@ public class LoseScreen extends DefaultScreen implements Screen {
 		this.spr = new Sprite(this.img);
 		this.spr.setPosition(0, 0);
 		this.spr.setSize(100, 100);
+		
+		loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/you_lose.wav"));
+		loseSound.play();
 	}
 
 	public void render(float delta) {
@@ -61,5 +66,10 @@ public class LoseScreen extends DefaultScreen implements Screen {
 		if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
 			this.mightyGame.setScreen(new ScreenLevel1(this.mightyGame));
 		}
+	}
+	
+	public void dispose() {
+		loseSound.dispose();
+		this.img.dispose();
 	}
 }

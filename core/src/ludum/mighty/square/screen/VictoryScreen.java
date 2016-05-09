@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.audio.Sound;
+
 
 public class VictoryScreen extends DefaultScreen implements Screen {
 
@@ -18,7 +20,8 @@ public class VictoryScreen extends DefaultScreen implements Screen {
 	Sprite spr;
 	OrthographicCamera cam;
 	StretchViewport sv;
-
+	Sound victory;
+	
 	int waitFramesForHandle = 100;
 
 	public VictoryScreen(Game game) {
@@ -34,6 +37,9 @@ public class VictoryScreen extends DefaultScreen implements Screen {
 		this.spr = new Sprite(this.img);
 		this.spr.setPosition(0, 0);
 		this.spr.setSize(100, 100);
+		
+		victory = Gdx.audio.newSound(Gdx.files.internal("sound/you_win.wav"));
+		victory.play();
 	}
 
 	public void render(float delta) {
@@ -61,5 +67,10 @@ public class VictoryScreen extends DefaultScreen implements Screen {
 		if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
 			this.mightyGame.setScreen(new ScreenLevel1(this.mightyGame));
 		}
+	}
+	
+	public void dispose() {
+		victory.dispose();
+		this.img.dispose();
 	}
 }

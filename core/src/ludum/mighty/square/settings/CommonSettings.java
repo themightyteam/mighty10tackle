@@ -12,5 +12,5 @@ public class CommonSettings {
 	//Number of levers to push to finish a level
 	public static int LEVERS_TO_PUSH = 2;
 	
-	public static int MSWAIT_AFTER_DEAD = 2000; //ms to wait after dead
+	public static int MSWAIT_AFTER_DEAD = 50; //ms to wait after dead
 }

@@ -178,14 +178,14 @@ public class ScreenLevel1 extends DefaultScreen {
 
 				this.epochsInDead = TimeUtils.millis();
 				this.state = STATE_VICTORY;
-				this.gameWorld.getSound().playVictorySound();
+				//this.gameWorld.getSound().playVictorySound();
 			}
 			else if (this.gameWorld.getGreenScore() < this.gameWorld.getVioletScore())
 			{
 
 				this.epochsInDead = TimeUtils.millis();
 				this.state = STATE_LOSE;
-				this.gameWorld.getSound().playLoseSound();
+				//this.gameWorld.getSound().playLoseSound();
 			}
 			else
 			{
