@@ -17,7 +17,6 @@ public abstract class NoPlayer {
 	public static final int TYPE_WICKEDREDMAGE = 6;
 	public static final int TYPE_WICKEDBLUEMAGE = 7;
 	public static final int TYPE_WICKEDPURPLEMAGE = 8;
-	public static final int TYPE_GREENBLOB = 9;
 	public static final int TYPE_PURPLEBLOB = 10;
 	public static final int TYPE_BAT = 11;
 	public static final int TYPE_WICKEDBULLET = 14;
