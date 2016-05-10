@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.noPlayer.GreenBase;
 import ludum.mighty.square.noPlayer.GreenFlag;
-import ludum.mighty.square.noPlayer.NoPlayer;
 import ludum.mighty.square.noPlayer.VioletBase;
 import ludum.mighty.square.noPlayer.VioletFlag;
 import ludum.mighty.square.player.NormalPlayer;
@@ -195,35 +194,15 @@ public class CollisionsListener implements ContactListener {
 		}
 
 		Player player = null;
-		NoPlayer noPlayer = null;
 
 		if (contact.getFixtureA().getBody().getUserData() instanceof Player) {
 			player = (Player) contact.getFixtureA().getBody().getUserData();
 			player.setTouching(true);
 		}
 		if (contact.getFixtureB().getBody().getUserData() instanceof Player) {
-			if (player != null) {
-				// Paradox!!
-				// player.setPlayerState(Player.STATE_PARADOX);
-				// player = (Player)
-				// contact.getFixtureB().getBody().getUserData();
-				// player.setPlayerState(Player.STATE_PARADOX);
-				return;
-			}
 			player = (Player) contact.getFixtureB().getBody().getUserData();
 			player.setTouching(true);
 		}
-
-		if (contact.getFixtureA().getBody().getUserData() instanceof NoPlayer) {
-			noPlayer = (NoPlayer) contact.getFixtureA().getBody().getUserData();
-		} else if (contact.getFixtureB().getBody().getUserData() instanceof NoPlayer) {
-			noPlayer = (NoPlayer) contact.getFixtureB().getBody().getUserData();
-		}
-
-		if ((player == null) || (noPlayer == null))
-			return;
-		// System.out.println("collision with " + noPlayer.getNoPlayerType());
-
 	}
 
 	@Override
