@@ -23,7 +23,6 @@ public class Player {
 										// touching something (so it can jump)
 	public static final int STATE_PLAYING = 1;
 	public static final int STATE_DEAD = 2;
-	public static final int STATE_PARADOX = 3;
 	public static final int STATE_VICTORY = 4;
 	public static final int STATE_TIMEOUT = 5;
 	public static final int STATE_ZOMBIE = 6;
