@@ -38,12 +38,7 @@ public class EnemyFactory {
 			if (enemyType.toUpperCase().equals("PURPLEBLOB"))
 			{
 				return new PurpleBlob(idEnemy, depId, duration, otherPatternList);
-			}
-			else if (enemyType.toUpperCase().equals("WICKEDBLUEMAGE"))
-			{
-				return new WickedBlueMage(idEnemy, depId, duration, otherPatternList);
-			}
-			else if (enemyType.toUpperCase().equals("WICKEDPURPLEMAGE"))
+			} else if (enemyType.toUpperCase().equals("WICKEDPURPLEMAGE"))
 			{
 				return new WickedPurpleMage(idEnemy, depId, duration, otherPatternList);
 				
