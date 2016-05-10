@@ -35,11 +35,7 @@ public class EnemyFactory {
 			
 			//Do the constructor considering the class
 		
-			if (enemyType.toUpperCase().equals("BAT"))
-			{
-				return new Bat(idEnemy,depId, duration, otherPatternList);
-			}
-			else if (enemyType.toUpperCase().equals("GARGOYLE"))
+			if (enemyType.toUpperCase().equals("GARGOYLE"))
 			{
 				return new Gargoyle(idEnemy, depId, duration, otherPatternList);
 			}
