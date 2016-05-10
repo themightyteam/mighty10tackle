@@ -55,12 +55,7 @@ public class EnemyFactory {
 			else if (enemyType.toUpperCase().equals("WICKEDBULLET"))
 			{
 				return new WickedBullet(idEnemy, depId, duration, otherPatternList);
-			}
-			else if (enemyType.toUpperCase().equals("BREAKABLEBLOCK"))
-			{
-				return new BreakableBlock(idEnemy, depId, duration, otherPatternList);
-			}
-			else if (enemyType.toUpperCase().equals("SPIKE"))
+			} else if (enemyType.toUpperCase().equals("SPIKE"))
 			{
 				return new Spike(idEnemy, depId, duration, otherPatternList);
 			}	

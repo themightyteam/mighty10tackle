@@ -6,7 +6,6 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import ludum.mighty.square.noPlayer.BreakableBlock;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.noPlayer.GreenBase;
 import ludum.mighty.square.noPlayer.GreenFlag;
@@ -247,10 +246,7 @@ public class CollisionsListener implements ContactListener {
 
 
 			}
-		} else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_BREAKABLEBLOCK) {
-			((BreakableBlock) noPlayer).setTouched(true);
-		} 
-		else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_KEY)
+		} else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_KEY)
 		{
 			((Key) noPlayer).setTouched(true);
 		}
