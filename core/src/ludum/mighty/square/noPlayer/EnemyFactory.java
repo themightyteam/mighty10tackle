@@ -48,9 +48,6 @@ public class EnemyFactory {
 				return new GreenBase(idEnemy, depId, duration, otherPatternList);
 			} else if (enemyType.toUpperCase().equals("VIOLETBASE")) {
 				return new VioletBase(idEnemy, depId, duration, otherPatternList);
-			} else if (enemyType.toUpperCase().equals("KEY"))
-			{
-				return new Key(idEnemy, depId, duration, otherPatternList);
 			}
 		}
 		

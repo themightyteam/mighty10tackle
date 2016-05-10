@@ -9,8 +9,6 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.noPlayer.GreenBase;
 import ludum.mighty.square.noPlayer.GreenFlag;
-import ludum.mighty.square.noPlayer.GreenRespawnPoint;
-import ludum.mighty.square.noPlayer.Key;
 import ludum.mighty.square.noPlayer.NoPlayer;
 import ludum.mighty.square.noPlayer.VioletBase;
 import ludum.mighty.square.noPlayer.VioletFlag;
@@ -225,16 +223,6 @@ public class CollisionsListener implements ContactListener {
 		if ((player == null) || (noPlayer == null))
 			return;
 		// System.out.println("collision with " + noPlayer.getNoPlayerType());
-
-		// resolve collision
-		if (noPlayer.getNoPlayerType() == noPlayer.TYPE_KEY)
-		{
-			((Key) noPlayer).setTouched(true);
-		}
-		else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_RESPAWN_POINT)
-		{
-			((GreenRespawnPoint) noPlayer).setTouched(true);
-		}
 
 	}
 
