@@ -35,11 +35,7 @@ public class EnemyFactory {
 			
 			//Do the constructor considering the class
 		
-			if (enemyType.toUpperCase().equals("LEVER"))
-			{
-				return new Lever(idEnemy, depId, duration, otherPatternList);
-			}
- else if (enemyType.toUpperCase().equals("GREENRESPAWNPOINT")) {
+			if (enemyType.toUpperCase().equals("GREENRESPAWNPOINT")) {
 				return new GreenRespawnPoint(idEnemy, depId, duration, otherPatternList);
 			} else if (enemyType.toUpperCase().equals("VIOLETRESPAWNPOINT")) {
 				return new VioletRespawnPoint(idEnemy, depId, duration, otherPatternList);

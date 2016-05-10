@@ -11,7 +11,6 @@ import ludum.mighty.square.noPlayer.GreenBase;
 import ludum.mighty.square.noPlayer.GreenFlag;
 import ludum.mighty.square.noPlayer.GreenRespawnPoint;
 import ludum.mighty.square.noPlayer.Key;
-import ludum.mighty.square.noPlayer.Lever;
 import ludum.mighty.square.noPlayer.NoPlayer;
 import ludum.mighty.square.noPlayer.VioletBase;
 import ludum.mighty.square.noPlayer.VioletFlag;
@@ -228,16 +227,7 @@ public class CollisionsListener implements ContactListener {
 		// System.out.println("collision with " + noPlayer.getNoPlayerType());
 
 		// resolve collision
-		if (noPlayer.getNoPlayerType() == noPlayer.TYPE_LEVER) {
-			if (((Lever) noPlayer).isTouched() == false) {
-				player.setButtonsPushed(player.getButtonsPushed() + 1);
-				((Lever) noPlayer).setTouched(true);
-
-				//FIXME : open the door if the number of buttons pushed is more than x
-
-
-			}
-		} else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_KEY)
+		if (noPlayer.getNoPlayerType() == noPlayer.TYPE_KEY)
 		{
 			((Key) noPlayer).setTouched(true);
 		}

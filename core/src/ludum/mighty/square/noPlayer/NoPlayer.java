@@ -11,7 +11,6 @@ import ludum.mighty.square.pattern.StepProcess;
 public abstract class NoPlayer {
 
 	public static final int TYPE_BULLET = 2;
-	public static final int TYPE_LEVER = 15;
 	public static final int TYPE_KEY = 16;
 	public static final int TYPE_RESPAWN_POINT = 17;
 	public static final int TYPE_GREEN_FLAG = 19;
