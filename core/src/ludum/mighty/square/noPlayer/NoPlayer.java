@@ -10,7 +10,6 @@ import ludum.mighty.square.pattern.StepProcess;
 
 public abstract class NoPlayer {
 
-	public static final int TYPE_MAGE = 1;
 	public static final int TYPE_BULLET = 2;
 	public static final int TYPE_SPIKE = 3;
 	public static final int TYPE_WICKEDREDMAGE = 6;
