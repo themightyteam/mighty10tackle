@@ -47,12 +47,7 @@ public class EnemyFactory {
 			{
 				return new WickedPurpleMage(idEnemy, depId, duration, otherPatternList);
 				
-			}
-			else if (enemyType.toUpperCase().equals("WICKEDREDMAGE"))
-			{
-				return new WickedRedMage(idEnemy, depId, duration, otherPatternList);
-			}
-			else if (enemyType.toUpperCase().equals("WICKEDBULLET"))
+			} else if (enemyType.toUpperCase().equals("WICKEDBULLET"))
 			{
 				return new WickedBullet(idEnemy, depId, duration, otherPatternList);
 			} else if (enemyType.toUpperCase().equals("LEVER"))
