@@ -35,10 +35,7 @@ public class EnemyFactory {
 			
 			//Do the constructor considering the class
 		
-			if (enemyType.toUpperCase().equals("PURPLEBLOB"))
-			{
-				return new PurpleBlob(idEnemy, depId, duration, otherPatternList);
-			} else if (enemyType.toUpperCase().equals("WICKEDBULLET"))
+			if (enemyType.toUpperCase().equals("WICKEDBULLET"))
 			{
 				return new WickedBullet(idEnemy, depId, duration, otherPatternList);
 			} else if (enemyType.toUpperCase().equals("LEVER"))

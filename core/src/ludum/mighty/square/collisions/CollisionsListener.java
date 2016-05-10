@@ -229,9 +229,7 @@ public class CollisionsListener implements ContactListener {
 
 		// resolve collision
 		if ((noPlayer.getNoPlayerType() == noPlayer.TYPE_WICKEDBULLET)
-				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BULLET)
-				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_PURPLEBLOB)
-				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BAT)) {
+				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BULLET)) {
 			// Death
 
 
