@@ -1,10 +1,15 @@
 package ludum.mighty.square.collisions;
 
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
+
 import ludum.mighty.square.noPlayer.Beer;
 import ludum.mighty.square.noPlayer.BreakableBlock;
 import ludum.mighty.square.noPlayer.Bullet;
 import ludum.mighty.square.noPlayer.GreenBase;
-import ludum.mighty.square.noPlayer.GreenBlob;
 import ludum.mighty.square.noPlayer.GreenFlag;
 import ludum.mighty.square.noPlayer.GreenRespawnPoint;
 import ludum.mighty.square.noPlayer.Key;
@@ -16,12 +21,6 @@ import ludum.mighty.square.player.NormalPlayer;
 import ludum.mighty.square.player.Player;
 import ludum.mighty.square.settings.CommonSettings;
 import ludum.mighty.square.world.MightyWorld;
-
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Manifold;
 
 public class CollisionsListener implements ContactListener {
 
@@ -246,7 +245,6 @@ public class CollisionsListener implements ContactListener {
 		} else if ((noPlayer.getNoPlayerType() == noPlayer.TYPE_WICKEDBULLET)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_SPIKE)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BULLET)
-				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_GUILLOTINE)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_PURPLEBLOB)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BAT)) {
 			// Death
@@ -262,8 +260,6 @@ public class CollisionsListener implements ContactListener {
 
 
 			}
-		} else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_GREENBLOB) {
-			((GreenBlob) noPlayer).setTouched(true);
 		} else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_BREAKABLEBLOCK) {
 			((BreakableBlock) noPlayer).setTouched(true);
 		} 
