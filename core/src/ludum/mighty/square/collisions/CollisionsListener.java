@@ -228,13 +228,7 @@ public class CollisionsListener implements ContactListener {
 		// System.out.println("collision with " + noPlayer.getNoPlayerType());
 
 		// resolve collision
-		if ((noPlayer.getNoPlayerType() == noPlayer.TYPE_WICKEDBULLET)
-				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BULLET)) {
-			// Death
-
-
-			player.setPlayerState(Player.STATE_DEAD);
-		} else if (noPlayer.getNoPlayerType() == noPlayer.TYPE_LEVER) {
+		if (noPlayer.getNoPlayerType() == noPlayer.TYPE_LEVER) {
 			if (((Lever) noPlayer).isTouched() == false) {
 				player.setButtonsPushed(player.getButtonsPushed() + 1);
 				((Lever) noPlayer).setTouched(true);

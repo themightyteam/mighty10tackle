@@ -35,10 +35,7 @@ public class EnemyFactory {
 			
 			//Do the constructor considering the class
 		
-			if (enemyType.toUpperCase().equals("WICKEDBULLET"))
-			{
-				return new WickedBullet(idEnemy, depId, duration, otherPatternList);
-			} else if (enemyType.toUpperCase().equals("LEVER"))
+			if (enemyType.toUpperCase().equals("LEVER"))
 			{
 				return new Lever(idEnemy, depId, duration, otherPatternList);
 			}
