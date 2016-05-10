@@ -19,7 +19,6 @@ import ludum.mighty.square.noPlayer.VioletBase;
 import ludum.mighty.square.noPlayer.VioletFlag;
 import ludum.mighty.square.player.NormalPlayer;
 import ludum.mighty.square.player.Player;
-import ludum.mighty.square.settings.CommonSettings;
 import ludum.mighty.square.world.MightyWorld;
 
 public class CollisionsListener implements ContactListener {
@@ -231,18 +230,7 @@ public class CollisionsListener implements ContactListener {
 		// System.out.println("collision with " + noPlayer.getNoPlayerType());
 
 		// resolve collision
-		if (noPlayer.getNoPlayerType() == noPlayer.TYPE_DOOR) {
-			if (player.getActiveInLevel() == 1) {
-				// Next level or victory!
-				if (player.getButtonsPushed() >= CommonSettings.LEVERS_TO_PUSH) 
-				{
-					player.setPlayerState(Player.STATE_VICTORY);
-				}
-			} else {
-				player.setPlayerState(Player.STATE_VICTORY);
-			}
-
-		} else if ((noPlayer.getNoPlayerType() == noPlayer.TYPE_WICKEDBULLET)
+		if ((noPlayer.getNoPlayerType() == noPlayer.TYPE_WICKEDBULLET)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_SPIKE)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_BULLET)
 				|| (noPlayer.getNoPlayerType() == noPlayer.TYPE_PURPLEBLOB)

@@ -90,11 +90,6 @@ public class EnemyFactory {
 			{
 				return new Key(idEnemy, depId, duration, otherPatternList);
 			}
-			else if (enemyType.toUpperCase().equals("DOOR"))
-			{
-				return new Door(idEnemy, depId, duration, otherPatternList);
-			}
-			
 		}
 		
 		

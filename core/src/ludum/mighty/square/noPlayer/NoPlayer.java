@@ -13,7 +13,6 @@ public abstract class NoPlayer {
 	public static final int TYPE_MAGE = 1;
 	public static final int TYPE_BULLET = 2;
 	public static final int TYPE_SPIKE = 3;
-	public static final int TYPE_DOOR = 4;
 	public static final int TYPE_BREAKABLEBLOCK = 5;
 	public static final int TYPE_WICKEDREDMAGE = 6;
 	public static final int TYPE_WICKEDBLUEMAGE = 7;
