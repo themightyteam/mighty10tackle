@@ -73,7 +73,7 @@ public class ScreenLevel1 extends DefaultScreen {
 		//this.aiWorld.aStarFullTest();
 
 		//Init the world
-		this.gameWorld.init(this.map, this.currentLevel,null, TIME_TO_FINISH, this.aiWorld);
+		this.gameWorld.init(this.map, this.currentLevel, TIME_TO_FINISH, this.aiWorld);
 
 		//Create rendered
 		this.mightyRender = new MightyRender(this.gameWorld, this.map);
@@ -97,7 +97,6 @@ public class ScreenLevel1 extends DefaultScreen {
 		//FIXME Hector Stuff for debug
 		this.gameWorld.updateTime();
 		this.gameWorld.updateEnemyPosition();
-		this.gameWorld.updateGhostPosition();
 		this.gameWorld.updateAI();
 
 		// if (this.gameWorld.getTimeEpoch() > 30000 &&

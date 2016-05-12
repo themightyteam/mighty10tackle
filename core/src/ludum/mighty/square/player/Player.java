@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Array;
 
 import ludum.mighty.square.noPlayer.Bullet;
 
@@ -31,10 +30,6 @@ public class Player {
 
 	private boolean isReplaying;
 	private int activeInLevel; // the level where the user controls this player
-
-	private Array<RecordedStep> steps;
-
-	RecordedStep previousStep;
 
 	int buttonsPushed;
 
@@ -114,10 +109,6 @@ public class Player {
 	 */
 	public Player() {
 		touchingSomething = false;
-		steps = new Array<RecordedStep>(true, 7500);
-		previousStep = new RecordedStep(0, -1, -1, false);
-		steps.add(previousStep);
-
 		this.buttonsPushed = 0;
 		this.jumpingSinceEpoch = 0;
 		this.firingSinceEpoch = 0;
@@ -131,27 +122,6 @@ public class Player {
 		this.buttonsPushed = buttonsPushed;
 	}
 
-	public Array<RecordedStep> getRecordedSteps() {
-		// fix a bug in libgdx's Array that overwrites index 0 with
-		// the last value added
-		this.steps.set(0, new RecordedStep(0, -1, -1, false));
-
-		return steps;
-	}
-
-	public void setRecordedSteps(Array<RecordedStep> array) {
-		steps = array;
-	}
-
-	public void addRecordedStep(long timestamp, float x, float y, boolean fire) {
-		if ((this.previousStep.x != x) || (this.previousStep.y != y) || (this.previousStep.fire != fire)) {
-			RecordedStep step = new RecordedStep(timestamp, x, y, fire);
-			steps.add(step);
-			this.previousStep.timestamp = timestamp;
-			this.previousStep.x = x;
-			this.previousStep.y = y;
-		}
-	}
 
 	/**
 	 * @brief Updates player's Box2D body velocity and records the current
@@ -222,8 +192,6 @@ public class Player {
 		}
 
 		playerBody.setLinearVelocity(currentVelocity);
-		this.addRecordedStep(timeEpoch, playerBody.getWorldCenter().x - (float) 0.5,
-				playerBody.getWorldCenter().y - (float) 0.5, fireKeyPressed);
 	}
 
 	public boolean isTouching() {
@@ -256,15 +224,6 @@ public class Player {
 
 	public void setActiveInLevel(int activeInLevel) {
 		this.activeInLevel = activeInLevel;
-	}
-
-	public RecordedStep getCurrentRecordedStep(long timeEpoch) {
-		for (RecordedStep step : steps) {
-			if (step.timestamp >= timeEpoch) {
-				return step;
-			}
-		}
-		return new RecordedStep(timeEpoch, -1, -1, false);
 	}
 
 	public long getTimeDeath() {

@@ -2,12 +2,6 @@ package ludum.mighty.square.player;
 
 import java.util.ArrayList;
 
-import ludum.mighty.square.assets.SoundAssets;
-import ludum.mighty.square.noPlayer.Bullet;
-import ludum.mighty.square.world.MightyWorld;
-import ludum.mighty.square.world.pathnodes.PathNode;
-import ai.world.AIWorld;
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,6 +9,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+
+import ai.world.AIWorld;
+import ludum.mighty.square.assets.SoundAssets;
+import ludum.mighty.square.noPlayer.Bullet;
+import ludum.mighty.square.world.MightyWorld;
+import ludum.mighty.square.world.pathnodes.PathNode;
 
 
 /**
@@ -224,9 +224,6 @@ public class NormalPlayer extends Player
 		}
 
 		playerBody.setLinearVelocity(currentVelocity);
-		this.addRecordedStep(timeEpoch, playerBody.getWorldCenter().x - (float) 0.5,
-				playerBody.getWorldCenter().y - (float) 0.5, fireKeyPressed);
-
 
 		if (fireKeyPressed) {
 			if (timeEpoch - this.firingSinceEpoch > 300) {

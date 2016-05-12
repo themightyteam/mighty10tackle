@@ -33,7 +33,6 @@ import ludum.mighty.square.noPlayer.VioletRespawnPoint;
 import ludum.mighty.square.player.AINormalPlayer;
 import ludum.mighty.square.player.NormalPlayer;
 import ludum.mighty.square.player.Player;
-import ludum.mighty.square.player.RecordedStep;
 import ludum.mighty.square.settings.CommonSettings;
 import net.dermetfan.gdx.physics.box2d.Box2DMapObjectParser;
 
@@ -186,7 +185,7 @@ public class MightyWorld {
 	 * @param allRecordedSteps
 	 * @param timeToFinish
 	 */
-	public void init(TiledMap map, int level, Array<Array<RecordedStep>> allRecordedSteps, long timeToFinish,
+	public void init(TiledMap map, int level, long timeToFinish,
 			AIWorld aiWorld) 
 	{
 		//Load assets
@@ -999,49 +998,8 @@ public class MightyWorld {
 		return playerBody.getWorldCenter().y;
 	}
 
-	/**
-	 * 
-	 * @return Array of recorded steps for all the levels.
-	 */
-	public Array<Array<RecordedStep>> getAllRecordedSteps() {
-		Array<Array<RecordedStep>> allRecordedSteps = new Array<Array<RecordedStep>>(true, 10);
 
-		for (int i = 0; i < 10; i++)
-			allRecordedSteps.add(null);
 
-		Array<Body> bodies = new Array<Body>();
-		world.getBodies(bodies);
-		for (Body body : bodies) {
-			if (body.getUserData() instanceof Player) {
-				allRecordedSteps.set(((Player) body.getUserData()).getActiveInLevel() - 1,
-						((Player) body.getUserData()).getRecordedSteps());
-			}
-		}
-
-		return allRecordedSteps;
-	}
-
-	/**
-	 * @brief Updates the position of all the players from past levels with the
-	 *        recorded step in the current time.
-	 */
-	public void updateGhostPosition() {
-		Array<Body> bodies = new Array<Body>();
-		world.getBodies(bodies);
-		for (Body body : bodies) {
-			if (body.getUserData() instanceof Player) {
-				if (((Player) body.getUserData()).getActiveInLevel() < this.curentLevel) {
-
-					RecordedStep step = ((Player) body.getUserData()).getCurrentRecordedStep(this.timeEpoch);
-					if (step != null) {
-						body.setTransform(step.x, step.y, 0);
-						// TODO The recorded player fire is written here
-					}
-
-				}
-			}
-		}
-	}
 	/**
 	 * 
 	 * @return List of bodies of all players in the world.
