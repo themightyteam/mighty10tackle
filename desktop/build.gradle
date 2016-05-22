@@ -23,6 +23,8 @@ task dist(type: Jar) {
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+    
+    baseName = 'mightymelee'
 }
 
 dist.dependsOn classes
